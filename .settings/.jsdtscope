@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="external/qunit/|dist/|**/bower_components/*|src/i18n/|src/fields/|**/node_modules/*|tests/|external/jquery/|**/*.min.js|demos/|src/" kind="src" path="jsgrid-1.5.3"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="jsgrid-1.5.3/demos"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="jsgrid-1.5.3/dist"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="jsgrid-1.5.3/external/jquery"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="jsgrid-1.5.3/external/qunit"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|i18n/|fields/|**/*.min.js" kind="src" path="jsgrid-1.5.3/src"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="jsgrid-1.5.3/src/fields"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="jsgrid-1.5.3/src/i18n"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="jsgrid-1.5.3/tests"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="WebContent"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

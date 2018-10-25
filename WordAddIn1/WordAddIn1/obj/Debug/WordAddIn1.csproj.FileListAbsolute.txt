@@ -1,0 +1,12 @@
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\bin\Debug\WordAddIn1.dll
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\bin\Debug\WordAddIn1.pdb
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\bin\Debug\WordAddIn1.dll.manifest
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\bin\Debug\WordAddIn1.vsto
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\obj\Debug\WordAddIn1.csprojAssemblyReference.cache
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\obj\Debug\WordAddIn1.Properties.Resources.resources
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\obj\Debug\WordAddIn1.csproj.GenerateResource.cache
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\obj\Debug\WordAddIn1.csproj.CoreCompileInputs.cache
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\obj\Debug\WordAddIn1.csproj.CopyComplete
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\obj\Debug\WordAddIn1.dll
+C:\Users\zyankowitz\source\repos\WordAddIn1\WordAddIn1\obj\Debug\WordAddIn1.pdb

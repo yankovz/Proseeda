@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<style>
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.previous {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.next {
+    background-color: #4c54af;
+    color: white;
+}
+
+.round {
+    border-radius: 50%;
+}
+</style>
+	<script type="text/javascript">
+		var today = localStorage.getItem("date");
+		
+		// Retrieve
+		if(today===null)
+		{
+		 	today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth()+1; //January is 0!
+			var yyyy = today.getFullYear();
+			
+			if(dd<10) {
+			    dd = '0'+dd
+			} 
+			
+			if(mm<10) {
+			    mm = '0'+mm
+			} 
+			today = mm + '/' + dd + '/' + yyyy;
+			
+			localStorage.setItem("date",today);
+			
+			document.getElementById("date").innerHTML=today;
+		}
+		
+		
+	</script>
+    <title id='Description'>Proseeda Daily Report</title>
+    <link rel="stylesheet" href="jqwidgets-ver6.1.0/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1 minimum-scale=1" />	
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/scripts/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.selection.js"></script> 
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.columnsresize.js"></script> 
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdatetimeinput.js"></script>
+      <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.edit.js"></script>
+     
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/scripts/demos.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.aggregates.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.grouping.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.filter.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/qwidgets/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxpanel.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/globalization/globalize.js"></script>
+    
+
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcore.js"></script>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdatetimeinput.js"></script>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcalendar.js"></script>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/globalization/globalize.js"></script>
+    <style>
+        html, body{width: 100%; height: 100%; overflow: hidden;}
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = "jsp/loaddata.jsp";
+
+            // prepare the data
+            var source =
+            {
+                datatype: "json",
+                datafields: [
+                    { name: 'Name', type: 'string' },
+                    { name: 'Case', type: 'string' },
+                    { name: 'Hour', type: 'string' },
+                    { name: 'Description', type: 'String' },
+                    { name: 'Source', type: 'string' },
+                    { name: 'Confirmed', type: 'bool' },
+                ],
+                id: 'id',
+                url: url,
+                addrow: function (rowid, rowdata, position, commit) {
+                    var formattedBirthDate = $.jqx.formatDate(rowdata.BirthDate, 'yyyy-MM-dd');
+                    var data = $.extend({}, rowdata);
+                    data.BirthDate = formattedBirthDate;
+                    $.ajax({
+                        url: 'jsp/addrow.jsp',
+                        data: data,
+                        type: 'POST',
+                        success: function (data, textStatus, jqXHR) {
+                            commit(true);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            commit(false);
+                        }
+                    });
+                },
+                deleterow: function (rowid, commit) {
+                    $.ajax({
+                        url: 'jsp/deleterow.jsp',
+                        data: {
+                            row: rowid
+                        },
+                        type: 'POST',
+                        success: function (data, textStatus, jqXHR) {
+                            commit(true);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            commit(false);
+                        }
+                    });
+                },
+                updaterow: function (rowid, newdata, commit) {
+                	var data = $.extend({}, newdata);
+                	data.id = rowid;
+                    $.ajax({
+                        url: 'jsp/updaterow.jsp',
+                        data: data,
+                        type: 'POST',
+                        success: function (data, textStatus, jqXHR) {
+                            commit(true);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            commit(false);
+                        }
+                    });
+                }
+                
+            };
+            var dataAdapter = new $.jqx.dataAdapter(source,
+            	    {
+            	formatData: function (data) {
+            		var today = localStorage.getItem("date");
+            		
+            		if(today!=null){
+            			data.date=today;	
+            			document.getElementById("date").innerHTML=today;
+            		}
+            		else{
+            			
+           			 	today = new Date();
+           				var dd = today.getDate();
+           				var mm = today.getMonth()+1; //January is 0!
+           				var yyyy = today.getFullYear();
+           				
+           				if(dd<10) {
+           				    dd = '0'+dd
+           				} 
+           				
+           				if(mm<10) {
+           				    mm = '0'+mm
+           				} 
+           			
+           				today = mm + '/' + dd + '/' + yyyy;
+           				localStorage.setItem("date",today);
+           				data.date=today;
+           				
+           				document.getElementById("date").innerHTML=today;	
+            			
+            		}
+            		
+            		data.userId = localStorage.getItem("userId");
+                    return data;
+                },
+            			loadError: function(jqXHR, status, error){
+            				alert('error1 on request');
+            			},
+            			beforeLoadComplete: function(result,req){
+            				//alert('before load');
+            			},
+            			downloadComplete: function(edata, textStatus, jqXHR){
+            				//alert('downloadComplete');
+            			},
+            			loadComplete: function() {
+                            var ids = grid.jqGrid('getDataIDs');
+                            for (var i=0;i<ids.length;i++) {
+                                var id=ids[i];
+                                var rowData = grid.jqGrid('getRowData',id);
+                                $('#'+id,grid[0]).attr('title', rowData.Name + ' , ' +
+                                                                rowData.Case + ', ' +
+                                                                rowData.Description);
+                            }
+                        }
+		            	
+		            	
+            	    }
+            	);
+            var toThemeProperty = function (className) {
+                return className + " " + className + "-" + theme;
+            }
+
+            var groupsrenderer = function (text, group, expanded, data) {
+                var number = dataAdapter.formatNumber(group, data.groupcolumn.cellsformat);
+                var text = number;
+                var aggregate =0;
+                
+                if(data.subGroups.length>0)
+                {
+                	var totalGroup = [];
+                	for (i = 0; i < data.subGroups.length; i++) {   
+                		for(j=0;j<data.subGroups[i].subItems.length;j++){
+                			totalGroup.push(data.subGroups[i].subItems[j]);	
+                		}
+                	}
+                	aggregate = this.getcolumnaggregateddata('Hour', ['sum'], true, totalGroup);	
+                }
+                else{
+                	aggregate = this.getcolumnaggregateddata('Hour', ['sum'], true, data.subItems);
+                }
+                
+                return '<div><span style="margin: 10px 10px;">' 
+                + text + 
+                '</span>' +
+                '<span style="position: fixed; right: 590px">' 
+                    +  Math.round(aggregate.sum*10)/10 + 
+                    '</span></div>';
+                    
+            }
+            
+            
+            $("#grid").jqxGrid(
+            {
+            	width: '99%',
+                height: '80%',
+                source: dataAdapter,
+                columnsresize: true,
+                
+                filterable: true,
+                filtermode: 'excel',
+                groupable: true,
+                showstatusbar: true,
+                editable: true,
+                statusbarheight: 50,
+                groupsrenderer: groupsrenderer,
+                showaggregates: true,
+                selectionmode: 'multiplecellsextended',
+                columns: [
+                  { text: 'Name', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Name',title:false,width:'20%'},
+                  { text: 'Case', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Case',title:false,width:'20%'},
+                  { text: 'Hour', columntype: 'textbox', filtercondition: 'starts_with',cellsalign: 'right', datafield: 'Hour',width:'15%',
+                	  aggregates: [{ 'Total Confirmed':
+                          function (aggregatedValue, currentValue, column, record) {
+                		  var total = 0;
+                		  if(record['Confirmed']===true){
+                          	total = Number(record['Hour']);
+                		  }
+                          return Math.round((aggregatedValue + total)*10)/10;
+                      }
+            		},{ 'Total Pending':
+                        function (aggregatedValue, currentValue, column, record) {
+            			var total=0;
+              		  if(record['Confirmed']===false){
+                        	total = Number(record['Hour']);
+              		  }
+              			return Math.round((aggregatedValue + total)*10)/10;
+                    }
+          			}
+                	  ]},
+                  { text: 'Description', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Description',title:false},
+                  { text: 'Source', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Source',title:false,width:'20%' },
+                  { text: 'Confirmed', datafield: 'Confirmed', columntype: 'checkbox'}
+                  
+              ],
+              	
+            	groups: ['Name','Case']
+            });
+            $("#expand").jqxButton({ theme: theme });
+            $("#collapse").jqxButton({ theme: theme });
+         // expand group.
+            $("#expand").on('click', function () {      
+                var groupnum = parseInt($("#groupnum").val());
+                if (!isNaN(groupnum)) {
+                    $("#grid").jqxGrid('expandgroup', groupnum);
+                }
+            });
+
+            // collapse group.
+            $("#collapse").on('click', function () {
+                var groupnum = parseInt($("#groupnum").val());
+                if (!isNaN(groupnum) && groupnum>1) {
+                    $("#grid").jqxGrid('collapsegroup', groupnum);
+                }
+            });
+         // trigger expand and collapse events.
+            $("#grid").on('groupexpand', function (event) {
+                var args = event.args;
+                $("#expandedgroup").text("Group: " + args.group + ", Level: " + args.level);
+            });
+
+            $("#grid").on('groupcollapse', function (event) {
+                var args = event.args;
+                $("#collapsedgroup").text("Group: " + args.group + ", Level: " + args.level);
+            });
+            $('#clearfilteringbutton').jqxButton({ height: 25});
+            $('#clearfilteringbutton').click(function () {
+                $("#grid").jqxGrid('clearfilters');
+            });
+            $("#addrowbutton, #deleterowbutton, #updaterowbutton").jqxButton({
+                width: 150
+            });
+
+            $('#addrowbutton').click(function () {
+                var datarow = generaterow();
+                var commit = $("#jqxgrid").jqxGrid('addrow', null, datarow);
+            });
+
+            $('#deleterowbutton').click(function () {
+                var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+                var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+                if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                    var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+                    var commit = $("#jqxgrid").jqxGrid('deleterow', id);
+                }
+            });
+
+            $('#updaterowbutton').click(
+                function () {
+                    var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+                    var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+                    if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                        var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+                        var datarow = generaterow();
+                        $("#jqxgrid").jqxGrid('updaterow', id, datarow);
+                    }
+                });
+        });
+    </script>
+</head>
+<body class='default'>
+		
+		<div id="header" align="center">
+		<h3 align="center">
+			
+			<a onClick=moveDateForward() class="previous round">&#8249;</a>
+			<span>&nbsp;&nbsp;&nbsp;</span>
+			<a id="date" onclick="openCalender();">ziv</a>
+			<span>&nbsp;&nbsp;&nbsp;</span>
+			<a onClick=moveDateBack()  class="next round">&#8250;</a>	
+		</div>
+		</h3>
+        <div id="grid"></div>
+        <input style="margin-top: 10px;" value="Remove Filter" id="clearfilteringbutton" type="button" />
+         
+        
+    </div>
+        
+</body>
+<script type="text/javascript">
+	function openCalender(){
+		window.open("calender6.html", "myWindow", 'width=300,height=300,menubar=0,status=0,titlebar=0');
+		window.close();
+	}
+	function moveDateForward(){
+		var today = localStorage.getItem("date");
+		
+		// Retrieve
+		if(today!=null)
+		{
+		 	today = new Date(today.toString());
+			var dd = today.getDate()+1;
+			var mm = today.getMonth()+1; //January is 0!
+			var yyyy = today.getFullYear();
+			
+			if(dd<10) {
+			    dd = '0'+dd
+			} 
+			
+			if(mm<10) {
+			    mm = '0'+mm
+			} 
+		
+			today = mm + '/' + dd + '/' + yyyy;
+			
+			localStorage.setItem("date",today);
+			document.getElementById("date").innerHTML=today;
+			location.reload();
+		}
+		
+		
+	}
+	function moveDateBack(){
+		var today = localStorage.getItem("date");
+		
+		// Retrieve
+		if(today!=null)
+		{
+			today = new Date(today.toString());
+			var dd = today.getDate()-1;
+			var mm = today.getMonth()+1; //January is 0!
+			var yyyy = today.getFullYear();
+			
+			if(dd<10) {
+			    dd = '0'+dd
+			} 
+			
+			if(mm<10) {
+			    mm = '0'+mm
+			} 
+			today = mm + '/' + dd + '/' + yyyy;
+			
+			localStorage.setItem("date",today);
+			document.getElementById("date").innerHTML=today;
+			location.reload();
+		}
+		
+		
+	}
+	
+</script>
+</html>

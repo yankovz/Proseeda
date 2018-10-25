@@ -1,0 +1,58 @@
+<link rel="stylesheet" type="text/css" href=".\Proseeda\WebContent\NewFile.css">
+
+
+<div class="box">
+<h1>Welcome to Proseeda</h1>
+
+<input id="email" type="email" name="email" value="email" onFocus="field_focus(this, 'email');" onblur="field_blur(this, 'email');" class="email" />
+  
+<input id="password" type="password" name="email" value="email" onFocus="field_focus(this, 'email');" onblur="field_blur(this, 'email');" class="email" />
+
+<button onclick="myFunction()" class="btn">Sign In</button>
+
+<a href="#"><div id="btn2">Sign Up</div></a> <!-- End Btn2 -->
+<div id="error"></div>
+
+</div> <!-- End Box -->
+  
+
+
+<p>Forgot your password? <u style="color:#f1c40f;">Click Here!</u></p>
+<script>
+function field_focus(field, email)
+{
+  if(field.value == email)
+  {
+    field.value = '';
+  }
+}
+
+function field_blur(field, email)
+{
+  if(field.value == '')
+  {
+    field.value = email;
+  }
+}
+
+//Fade in dashboard box
+
+	
+function myFunction() {
+	var email = document.getElementById("email").value;
+	var password = document.getElementById("password").value;
+	if((email === "ziv@proseeda.com" || email==='yuval@proseeda.com' || email==='einat@proseeda.com') && password ==="qwsa1234")
+		{
+			
+			window.location.assign("./Proseeda/WebContent/DataTable.html");
+		}
+	else
+		{
+			document.getElementById("error").innerHTML = "Bas user name or Password"
+		}
+    
+}
+</script>
+
+
+  

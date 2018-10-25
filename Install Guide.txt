@@ -1,0 +1,37 @@
+running proseeda on aws ec2
+
+mongo db
+----------
+logs are under /var/log/mongodb/
+data is under  /var/lib/mongo/
+
+starting mongo - sudo service mongod start
+stoping mongo - sudo service mongod stop 
+
+
+shell command
+---------------
+mongo to open shell
+db says which db in use
+use proseeda to use our database
+db.customers.find(); - get all data
+
+https://docs.mongodb.com/manual/mongo/#start-the-mongo-shell-and-connect-to-mongodb - shell commands
+
+tomcat
+-------
+install dir /opt/tomcat/apache-tomcat-8.5.34/
+proseeda dashboard is located at /opt/tomcat/apache-tomcat-8.5.34/webapp/proseeda
+proseeda crud jsp is located at /opt/tomcat/apache-tomcat-8.5.34/webapp/crud
+
+node.js - tcp server for microsoft clients
+---------------------------------------------
+
+path /home/ec2-user/proseeda/server
+installing mongo client for node - npm install mongodb
+npm install net - installing net socket packages
+running using node server.js
+
+appache web server
+---------------------
+path /var/www/html/

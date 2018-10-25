@@ -1,0 +1,41 @@
+<<<<<<< HEAD
+[
+  {
+   "Name": "PBC Limited",
+    "Hour": 2.23,
+    "Description": "meeting",
+    "Age": 61,
+    "Country": 6,
+    "Address": "Ap #897-1459 Quam Avenue",
+    "Married": false
+    },
+    {
+        "Name": "BBB Limited",
+        "Hour": 3.33,
+        "Description": "contracrt",
+        "Age": 61,
+	    "Country": 6,
+	    "Address": "Ap #897-1459 Quam Avenue",
+	    "Married": false
+    }        
+]
+=======
+{"a":5,"_id":"0v0DB0qgIWWWNDTE"}
+{"a":5,"_id":"CddXnaLwJMowVsvD"}
+{"a":5,"_id":"EHYS340ZXK1uazJu"}
+{"a":5,"_id":"MLMGOP6cGxtzN7b5"}
+{"a":42,"_id":"NrfKmDxFYBdChvE5"}
+{"a":42,"_id":"P3lWT4aykY5WzfuJ"}
+{"a":5,"_id":"RQVHRKzIgdGJMgiW"}
+{"a":5,"_id":"Rs80AB9CrLvn6IZQ"}
+{"a":42,"_id":"VRVUvlpABU8I9dKo"}
+{"a":5,"_id":"mBegp42VZzTFRhSV"}
+{"a":5,"_id":"o9ec3DFu5J4Sz39K"}
+{"a":42,"_id":"oCHkll1WAdmlcW82"}
+{"a":42,"_id":"t2EYyO5LqO2GmOgC"}
+{"a":5,"_id":"tA1zxeWee9KZlthO"}
+{"a":5,"_id":"uxgyWmsBmm5U054M"}
+{"a":5,"_id":"0G2pq2kjyEUz0SgA"}
+{"a":42,"_id":"FhRnEvL0Hzfba9pN"}
+{"a":5,"_id":"dq8mZnVZsBF58uWs"}
+>>>>>>> branch 'master' of https://github.com/yankovz/Proseeda

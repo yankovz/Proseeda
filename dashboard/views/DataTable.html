@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Proseeda</title>
+    <link rel="stylesheet" type="text/css" href="css/demos.css" />
+    <link rel="stylesheet" type="text/css" href="css/NewFile.css">
+    
+
+    <link rel="stylesheet" type="text/css" href="css/jsgrid.css" />
+    <link rel="stylesheet" type="text/css" href="css/theme.css" />
+
+    <script src="js/jsgrid-1.5.3/external/jquery/jquery-1.8.3.js"></script>
+    <script src="js/jsgrid-1.5.3/demos/db.js"></script>
+    
+    
+
+    <script src="js/jsgrid-1.5.3/src/jsgrid.core.js"></script>
+    <script src="js/jsgrid-1.5.3/src/jsgrid.load-indicator.js"></script>
+    <script src="js/jsgrid-1.5.3/src/jsgrid.load-strategies.js"></script>
+    <script src="js/jsgrid-1.5.3/src/jsgrid.sort-strategies.js"></script>
+    <script src="js/jsgrid-1.5.3/src/jsgrid.field.js"></script>
+    <script src="js/jsgrid-1.5.3/src/fields/jsgrid.field.text.js"></script>
+    <script src="js/jsgrid-1.5.3/src/fields/jsgrid.field.number.js"></script>
+    <script src="js/jsgrid-1.5.3/src/fields/jsgrid.field.select.js"></script>
+    <script src="C:/dev/Proseeda/WebContent/jsgrid-1.5.3/src/fields/jsgrid.field.checkbox.js"></script>
+    <script src="C:/dev/Proseeda/WebContent/jsgrid-1.5.3/src/fields/jsgrid.field.control.js"></script>
+    <style>
+		header
+		{
+		    background-color:#DCDCDC;
+		}
+	</style>
+</head>
+<body>
+	<header>
+	
+		<h1 >
+			<p align="center" id="date"></p>
+			<p id="user"/>
+		</h1>
+    </header>
+    	
+    </h1>
+    <div id="jsGrid"></div>
+
+    <script>
+        $(function() {
+
+            $("#jsGrid").jsGrid({
+            	height: "70%",
+                width: "100%",
+                filtering: true,
+                editing: true,
+                inserting: true,
+                sorting: true,
+                paging: true,
+                autoload: true,
+                pageSize: 15,
+                pageButtonCount: 5,
+                deleteConfirm: "Do you really want to delete the client?",
+                controller: {
+                    loadData: function(filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: "/controller",
+                            data: filter
+                        });
+                    },
+                    insertItem: $.noop,
+                    updateItem: $.noop,
+                    deleteItem: $.noop
+                },
+                fields: [
+                    { name: "Name", type: "text", width: 150 },
+                    { name: "Hour", type: "number", width: 50 },
+                    { name: "Description", type: "text", width: 200 },
+                    { type: "control" }
+                ]
+            });
+
+        });
+    </script>
+</body>
+</html>
+
+
+
+

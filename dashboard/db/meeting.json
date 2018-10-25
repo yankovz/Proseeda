@@ -1,0 +1,22 @@
+<<<<<<< HEAD
+{"Name":"PBC Limited","Hour":2.23,"Description":"meeting","Age":61,"Country":6,"Address":"Ap #897-1459 Quam Avenue","Married":false,"_id":"5RY8E5j7VYtnCINt"}
+{"Name":"PWC Real Estate Division (4337) Wembley Building (4337/991)","Hour":"0.30","Description":"Meeting About a deal","Age":"61","Country":"6","Address":"Ap #897-1459 Quam Avenue","Married":"false","_id":"Aeqa9A1ASSkWXrxL"}
+{"Name":"PWC Law Division (4331) Smith vs IRS (4331/82)","Hour":"0.30","Description":"Meeting about contract","Age":"61","Country":"6","Address":"Ap #897-1459 Quam Avenue","Married":"false","_id":"P3AiqsMjUGhWJYZc"}
+{"Name":"PWC Law Division (4331) Foxcon Due Diligence (4331/021)","Hour":"1.30","Description":"Meeting to review contact","Age":"61","Country":"6","Address":"Ap #897-1459 Quam Avenue","Married":"false","_id":"aS6f2kwbPdwGq07l"}
+=======
+[{"id":"1","Name":"PWC","Case":"533","Hour":"0.4","Description":"Editing Document NamedContract 96573.docx","Source":"Document Edit","Confirmed":"true"},
+{"id":"2","Name":"PWC2","Case":"455","Hour":"2","Description":"Editing Document NamedContract 96576.docx","Source":"Document Edit","Confirmed":"true"}
+
+,
+{"id":"3","Name":"PWC","Case":"457","Hour":"2","Description":"Editing Document NamedContract 96576.docx","Source":"Document Edit","Confirmed":"false"}
+
+,
+{"id":"4","Name":"IBM","Case":"538","Hour":"2","Description":"Editing Document NamedContract 96576.docx","Source":"Document Edit","Confirmed":"false"}
+
+,{"id":"5","Name":"APPLE","Case":"655","Hour":"2","Description":"Editing Document NamedContract 96576.docx","Source":"Document Edit","Confirmed":"false"}
+
+,
+{"id":"6","Name":"IBM","Case":"775","Hour":"2","Description":"Editing Document NamedContract 96576.docx","Source":"Document Edit","Confirmed":"false"},
+{"id":"7","Name":"PWC","Case":"533","Hour":"1.4","Description":"Email","Source":"Email","Confirmed":"true"}
+]
+>>>>>>> branch 'master' of https://github.com/yankovz/Proseeda

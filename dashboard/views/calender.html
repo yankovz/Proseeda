@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<link rel="stylesheet" href="jqwidgets-ver6.1.0/jqwidgets/styles/jqx.base.css" type="text/css"/>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcore.js"></script>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdatetimeinput.js"></script>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcalendar.js"></script>
+<script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/globalization/globalize.js"></script>
+ </head>
+<body>
+<div id='content'>
+  <script type="text/javascript">
+	  
+      $(document).ready(function () {
+          $("#jqxcalendar").jqxCalendar({ width: '250px', height: '250px' });
+          $('#jqxcalendar').bind('valuechanged', function (event) {
+              var today = event.args.date;
+              var dd = today.getDate();
+	  			var mm = today.getMonth()+1; //January is 0!
+	  			var yyyy = today.getFullYear();
+	  			
+	  			if(dd<10) {
+	  			    dd = '0'+dd
+	  			} 
+	  			
+	  			if(mm<10) {
+	  			    mm = '0'+mm
+	  			} 
+	  			today = mm + '/' + dd + '/' + yyyy;
+	  			
+	  			localStorage.setItem("date",today);
+	  			window.onunload = refreshParent;
+	  			setTimeout(function(){
+	  			    self.close();
+	  			},500);
+              
+          });
+      });
+      function refreshParent() {
+          window.opener.location.reload();
+      }
+  </script>  
+  <div id='jqxcalendar'></div>
+  <div id='log'></div>
+</div>
+</body>
+</html>
