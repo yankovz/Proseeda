@@ -24,7 +24,7 @@
 	
 	DB database = mongoClient.getDB("proseeda");
 	System.out.println("i was called2");
-	DBCollection collection = database.getCollection("activties");
+	DBCollection collection = database.getCollection("activities");
 	System.out.println("i was called3");
 	System.out.println("id to update: " + rowToUpdate);
 

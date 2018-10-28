@@ -38,21 +38,47 @@ var server = net.createServer(function (socket) {
 		    obj.Confirmed=false;
 		    obj.date=today;
 		    console.log("got user: " + obj.user);
-		    var query = { userName: "Ziv Yankowitz" };
+		    var query = { userName: obj.user };
 		    var userId; 
 		    console.log("query: " + query);
 		    dbo.collection("users").findOne(query, function(err, result) {
 		        if (err) throw err;
-		        
+		        console.log("found1 user going to check source phone");
 		        obj.userId = result.userId;
-		        console.log("going to insert: " + result.userId);
-		        dbo.collection("activties").insertOne(obj, function(err, res) {
-			        if (err) throw err;
-			        console.log("1 document inserted");
-			        //db.close();
-			      });
-			    
-			    console.log("converted data: " + obj);
+		        console.log(obj.Source);
+		        if(obj.Source==='phone call')
+		        {
+		        	console.log("found user going to check source phone : " +obj.Name );
+		        	if(obj.Name!=null){
+		        		query = {phone: obj.Name};
+			        	dbo.collection("customers").findOne(query, function(err,result){
+			        		if(!err)
+			        		{
+						        console.log("going to insert1: " + result.userId);
+						        obj.Name=result.name;
+						        obj.Case=result.Case;
+						        console.log("going to insert client: " + result.name + ", " + obj.Name);
+						        dbo.collection("activities").insertOne(obj, function(err, res) {
+							        if (err) throw err;
+							        console.log("1 document inserted");
+							        //db.close();
+							      });
+							    
+							    console.log("converted data: " + obj);
+			        		}
+			        	});
+		        	}
+		        }
+		        else{
+		        	console.log("going to insert: " + result.userId);
+			        dbo.collection("activities").insertOne(obj, function(err, res) {
+				        if (err) throw err;
+				        console.log("1 document inserted");
+				        //db.close();
+				      });
+				    
+				    console.log("converted data: " + obj);
+		        }
 		        
 		      });
 		    

@@ -15,7 +15,7 @@
 	
 	DB database = mongoClient.getDB("proseeda");
 	System.out.println("i was called2");
-	DBCollection collection = database.getCollection("activties");
+	DBCollection collection = database.getCollection("activities");
 	System.out.println("i was called3");
 	String date1 = request.getParameter("date");
 	String userId = request.getParameter("userId");          
