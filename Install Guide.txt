@@ -30,7 +30,9 @@ node.js - tcp server for microsoft clients
 path /home/ec2-user/proseeda/server
 installing mongo client for node - npm install mongodb
 npm install net - installing net socket packages
-running using node server.js
+our node.js script is called server.js
+it logs console messages into /home/ec2-user/proseeda/server/debug.log
+it starts using pm2 start server.js and stooped using pm2 stop server.js
 
 appache web server
 ---------------------
