@@ -36,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
                     if(state==TelephonyManager.CALL_STATE_RINGING) {
                         Toast.makeText(getApplicationContext(), "Phone Is Riging from: " + incomingNumber,
                                 Toast.LENGTH_LONG).show();
-                        Thread thread = new Thread(new SocketSendThread());
-                        thread.start();
-                        try {
-                            thread.join();
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
+//                        Thread thread = new Thread(new SocketSendThread());
+//                        thread.start();
+//                        try {
+//                            thread.join();
+//                        } catch (InterruptedException ex) {
+//                            ex.printStackTrace();
+//                        }
                         //thread.stop();
                     }
                     if(state==TelephonyManager.CALL_STATE_OFFHOOK){
@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject json = new JSONObject("{\"Name\": \"" + number + "\",\"Case\": \"zivcase\",\"Hour\": \"" +
                         sb.toString() +
-                        "\", \"Description\": \" phone call from: " +number+ "\",\"user\": \"Ziv Yankowitz`\",\"Source\": \"phone call\"" +
-                        "}");
+                        "\", \"Description\": \" phone call from: " +number+ "\",\"user\": \"Ziv Yankowitz\",\"Source\": \"phone call\"," +
+                        "\"msgRequestInsert\":\"insert\"}");
 //                Toast.makeText(getApplicationContext(), "going to send to server: " + json.toString(),
 //                        Toast.LENGTH_LONG).show();
                 Socket s = new Socket(serverAddress, serverPort);
