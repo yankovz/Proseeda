@@ -227,7 +227,7 @@ namespace OutlookAddIn1
                         Convert.ToString(hour) + "." + Convert.ToString(minute) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \""+appointment.Organizer +
-                        "\",\"Source\": \"Calender Meeting Actual Time\"" +
+                        "\",\"Source\": \"Calender Meeting Actual Time\",\"msgRequestInsert\":\"insert\"" +
                         "}";
                     
                     byte[] outStream = Encoding.ASCII.GetBytes(clientData);
@@ -242,7 +242,7 @@ namespace OutlookAddIn1
                         Convert.ToString(hour) + "." + Convert.ToString(minute) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \"" + appointment.Organizer  +
-                        "\",\"Source\": \"Calender Meeting Setup Time\"" +
+                        "\",\"Source\": \"Calender Meeting Setup Time\",\"msgRequestInsert\":\"insert\"" +
                         "}";
                     
 
@@ -315,11 +315,15 @@ namespace OutlookAddIn1
                     NetworkStream serverStream = _tcpclient.GetStream();
                     String Name = cb.SelectedItem.ToString().Substring(0, cb.SelectedItem.ToString().IndexOf(")")+1);
                     String Case = cb.SelectedItem.ToString().Substring(cb.SelectedItem.ToString().IndexOf(")") + 2);
+                    String cn = appointment.SenderEmailAddress.Substring(
+                        appointment.SenderEmailAddress.IndexOf("CN") + 3);
+                    String user = cn.Substring(
+                        cn.IndexOf("CN") + 3);
                     string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case + "\",\"Hour\": \"" +
                         Convert.ToString(hour) + "." + Convert.ToString(minute) + 
                         "\", \"Description\": \"" + appointment.Subject +
-                        "\",\"user\": \"" + appointment.SenderName  +
-                        "\",\"Source\": \"Email\"" + 
+                        "\",\"user\": \"" + user  +
+                        "\",\"Source\": \"Email\",\"msgRequestInsert\":\"insert\"" + 
                         "}";
 
 
