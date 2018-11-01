@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace OutlookAddIn1
 {
     [System.ComponentModel.ToolboxItemAttribute(false)]
     partial class FormRegion3 : Microsoft.Office.Tools.Outlook.FormRegionBase
     {
+        private TcpClient _tcpclient;
+
+        private System.IO.StreamReader _sReader;
+        private System.IO.StreamWriter _sWriter;
         public FormRegion3(Microsoft.Office.Interop.Outlook.FormRegion formRegion)
             : base(Globals.Factory, formRegion)
         {
@@ -44,6 +54,8 @@ namespace OutlookAddIn1
         /// </summary>
         private void InitializeComponent()
         {
+            if(ThisAddIn.customerData.Count==0)
+                this.getCustomerDetails();
             //initalize the default value into the new form we added
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -89,12 +101,23 @@ namespace OutlookAddIn1
             this.comboBox1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.Add("Please Select a Client Case:");
+            foreach (DictionaryEntry pair in ThisAddIn.customerData)
+            {
+                ArrayList listCases = (ArrayList)pair.Value;
+                for (int i = 0; i < listCases.Count; i++)
+                {
+                    this.comboBox1.Items.Add(pair.Key + "," + listCases[i].ToString());
+                }
+
+
+            }
             //@todo get this from database
-            this.comboBox1.Items.AddRange(new object[] {
+            /*this.comboBox1.Items.AddRange(new object[] {
             "Please Select a Client Case:",
             "PWC Law Division (4331) Foxcon Due Diligence (4331/021)",
             "PWC Law Division (4331) Smith vs IRS (4331/82)",
-            "PWC Real Estate Division (4337) Wembley Building (4337/991)"});
+            "PWC Real Estate Division (4337) Wembley Building (4337/991)"});*/
             this.comboBox1.Location = new System.Drawing.Point(301, 1);
             this.comboBox1.MaxDropDownItems = 60;
             this.comboBox1.Name = "comboBox1";
@@ -169,6 +192,91 @@ namespace OutlookAddIn1
                 
             }
         }
+
+        private void getCustomerDetails()
+        {
+            try
+            {
+                //server ip
+                //String ipAddress = "127.0.0.1";
+                String ipAddress = "18.224.148.94";
+                //port number
+                int portNum = 8099;
+                //@todo error handling
+
+                try
+                {
+                    _tcpclient = new TcpClient();
+                    _tcpclient.Connect(ipAddress, portNum);
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                try
+                {
+
+                    NetworkStream serverStream = _tcpclient.GetStream();
+                    //capturing the meeting time
+
+                    String clientData = "{\"msgRequestInsert\": \"query\"}";
+
+                    byte[] outStream = Encoding.ASCII.GetBytes(clientData);
+                    serverStream.Write(outStream, 0, outStream.Length);
+                    serverStream.Flush();
+                    // String to store the response ASCII representation.
+                    String responseData = String.Empty;
+                    Byte[] data = new Byte[1024];
+                    // Read the first batch of the TcpServer response bytes.
+                    Int32 bytes = serverStream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                    dynamic json = JsonConvert.DeserializeObject(responseData);
+                    for (int i = 0; i < json.Count; i++)
+                    {
+                        dynamic record = json[i];
+                        if (!ThisAddIn.customerData.ContainsKey(record.name))
+                        {
+                            ArrayList casesList = new ArrayList();
+                            dynamic cases = record.cases;
+                            for (int j = 0; j < cases.Count; j++)
+                            {
+                                dynamic caseRec = cases[j];
+                                casesList.Add(caseRec.name);
+                            }
+                            ThisAddIn.customerData.Add(record.name, casesList);
+
+
+                        }
+                    }
+                    Console.WriteLine("Received: {0}", responseData);
+
+                    _sWriter.Close();
+                    _tcpclient.Close();
+
+                }
+                catch (ArgumentNullException ane)
+                {
+                    Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+                }
+                catch (SocketException se)
+                {
+                    Console.WriteLine("SocketException : {0}", se.ToString());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
         private void checkBox2_SelectedCheckedChanged(object sender, System.EventArgs e)
         {
             CheckBox comboBox = (CheckBox)sender;

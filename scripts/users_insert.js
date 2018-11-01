@@ -1,0 +1,1 @@
+db.users.insert({"userId":"ziv@proseeda.com","userName":"Ziv Yankowitz"});

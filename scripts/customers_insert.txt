@@ -1,0 +1,9 @@
+db.customers.insert([{"name" : "PWC Law Division (4331)" },
+{"name" : "PWC Law Division (4331)" },
+{"name" : "PWC Real Estate Division" }])
+
+db.cases.insert([{"customerid":ObjectId("5bdac1536c7946d27c2b274e"),"name" : "Foxcon Due Diligence (4331/021)","default":true},
+{"customerid":ObjectId("5bdac1536c7946d27c2b274e"),"name" : "Smith vs IRS (4331/82)","default":false },
+{"customerid":ObjectId("5bdac1536c7946d27c2b274f"),"name" : "Wembley Building (4337/991)" ,"default":true}])
+
+db.customersdetails.insert([{{"customerid":ObjectId("5bdac1536c7946d27c2b274e"),"phone":"0737140010"}])

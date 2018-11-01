@@ -1,8 +1,10 @@
 var someRandomPort = 8099,
 net = require('net');
-var MongoClient = require('mongodb').MongoClient;
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 var url = "mongodb://localhost:27017/";
 var msgRequestInsert="insert";
+var msgRequestQuery="query";
 var fs = require('fs');
 var util = require('util');
 var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
@@ -33,75 +35,16 @@ try{
 				 //@todo handle parsing error
 				 var obj = JSON.parse(data);
 				 if(obj.msgRequestInsert!=null && obj.msgRequestInsert===msgRequestInsert)
-			     {
-				    var today = new Date();
-					var dd = today.getDate();
-					var mm = today.getMonth()+1; //January is 0!
-					var yyyy = today.getFullYear();
-					
-					if(dd<10) {
-					    dd = '0'+dd
-					} 
-					
-					if(mm<10) {
-					    mm = '0'+mm
-					} 
-					
-					today = mm + '/' + dd + '/' + yyyy;
-				    obj.Confirmed=false;
-				    obj.date=today;
-				    console.log("got user: " + obj.user);
-				    var query = { userName: obj.user };
-				    var userId; 
-				    console.log("query: " + query.toString());
-				    dbo.collection("users").findOne(query, function(err, result) {
-				        if (!err && result!=null)
-				        {
-					        console.log("found1 user going to check source phone");
-					        obj.userId = result.userId;
-					        console.log(obj.Source);
-					        if(obj.Source==='phone call')
-					        {
-					        	console.log("found user going to check source phone : " +obj.Name );
-					        	if(obj.Name!=null){
-					        		query = {phone: obj.Name};
-						        	dbo.collection("customers").findOne(query, function(err,result){
-						        		if(!err)
-						        		{
-									        console.log("going to insert1: " + result.userId);
-									        obj.Name=result.name;
-									        obj.Case=result.Case;
-									        console.log("going to insert client: " + result.name + ", " + obj.Name);
-									        dbo.collection("activities").insertOne(obj, function(err, res) {
-										        if (err) throw err;
-										        console.log("1 document inserted");
-										        //db.close();
-										      });
-										    
-										    console.log("converted data: " + obj);
-						        		}
-						        	});
-					        	}
-					        }
-					        else{
-					        	console.log("going to insert: " + result.userId);
-						        dbo.collection("activities").insertOne(obj, function(err, res) {
-							        if (err) throw err;
-							        console.log("1 document inserted");
-							        //db.close();
-							      });
-							    
-							    console.log("converted data: " + obj);
-					        }
-				        }
-				        else{
-				        	console.log("couldnt find user with Name: " + obj.user)
-				        }
-				      });
-		    	}
+				 {
+					 processInsert(obj);
+				 }
+				 if(obj.msgRequestInsert!=null && obj.msgRequestInsert===msgRequestQuery)
+				 {
+					 processQueryCustomer(obj,socket);
+				 }
 				    
 		    }catch(ex){
-		    	//console.log(ex);
+		    	console.log(ex);
 		    }   
 			    //obj.userId=result.userId;
 		    
@@ -111,5 +54,120 @@ try{
 	// Start listening
 	server.listen(someRandomPort);
 }catch(error){
-	//console.log("got error: " + error);
+	console.log("got error: " + error);
+}
+
+function processQueryCustomer(obj,socket){
+	console.log("processQueryCustomer starting");
+	dbo.collection('customers').aggregate([
+		{ $lookup:
+	       {
+	         from: 'cases',
+	         localField: '_id',
+	         foreignField: 'customerid',
+	         as: 'cases'
+	       }
+	     }
+	    ]).toArray(function(err, res){
+	    	console.log("processQueryCustomer starting2 : " + JSON.stringify(res));
+	    	var cust = res[0].cases;
+	    	console.log("processQueryCustomer starting3 : " + JSON.stringify(cust));
+    		if(!err && res.length>0)
+    		{
+    			socket.write(JSON.stringify(res));
+    			//socket.flush();
+    		}
+	    });	
+}
+
+function processInsert(obj){
+	
+    var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	
+	if(dd<10) {
+	    dd = '0'+dd
+	} 
+	
+	if(mm<10) {
+	    mm = '0'+mm
+	} 
+	
+	today = mm + '/' + dd + '/' + yyyy;
+    obj.Confirmed=false;
+    obj.date=today;
+    console.log("got user: " + obj.user);
+    var query = { userName: obj.user };
+    var userId; 
+    console.log("query: " + query.toString());
+    dbo.collection("users").findOne(query, function(err, result) {
+        if (!err && result!=null)
+        {
+	        console.log("found1 user going to check source phone");
+	        obj.userId = result.userId;
+	        console.log(obj.Source);
+	        if(obj.Source==='phone call')
+	        {
+	        	console.log("found user going to check source phone : " +obj.Name );
+	        	if(obj.Name!=null){
+	        		query = {phone: obj.Name};
+	        		dbo.collection('customersdetails').aggregate([
+	        			{ "$match": { "phone": obj.Name } },
+	        			{ $lookup:
+	        		       {
+	        		         from: 'customers',
+	        		         localField: 'customerid',
+	        		         foreignField: '_id',
+	        		         as: 'customer'
+	        		       }
+	        		     }
+	        		    ]).toArray(function(err, res){
+		        		if(!err && res.length>0)
+		        		{
+		        			var result = res[0];//assume one phone per client
+		        			
+					        console.log("going to insert1: " + JSON.stringify(result));
+					        var cust = result.customer[0];
+					        console.log("going to insert2: " + JSON.stringify(cust));
+					        obj.Name=cust.name;
+					        //find the default case in case of phone call
+					        var o_id =  new mongodb.ObjectID(cust._id);
+					        query = {customerid: o_id
+					        ,default:true};
+					        dbo.collection('cases').findOne(query, function(err, result) {
+					        	if(!err && result!=null && result.name!=null)
+					        	{
+							        obj.Case=result.name;
+							        console.log("going to insert client case: " + obj.Case);
+							        dbo.collection("activities").insertOne(obj, function(err, res) {
+								        if (err) throw err;
+								        console.log("1 document inserted");
+								        //db.close();
+								      });
+								    
+								    console.log("converted data: " + obj);
+					        	}
+					        });
+		        		}
+		        	});
+	        	}
+	        }
+	        else{
+	        	console.log("going to insert: " + result.userId);
+		        dbo.collection("activities").insertOne(obj, function(err, res) {
+			        if (err) throw err;
+			        console.log("1 document inserted");
+			        //db.close();
+			      });
+			    
+			    console.log("converted data: " + obj);
+	        }
+        }
+        else{
+        	console.log("couldnt find user with Name: " + obj.user)
+        }
+      });
+
 }
