@@ -155,12 +155,17 @@ function processInsert(obj){
 	        	}
 	        }
 	        else{
-	        	console.log("going to insert: " + result.userId);
-		        dbo.collection("activities").insertOne(obj, function(err, res) {
-			        if (err) throw err;
-			        console.log("1 document inserted");
-			        //db.close();
-			      });
+	        	query = {name: obj.Name};
+		        dbo.collection('customers').findOne(query, function(err, result) {
+		        	if(!err && result!=null && result.name!=null)
+		        	{
+			        	console.log("going to insert: " + result.userId);
+				        dbo.collection("activities").insertOne(obj, function(err, res) {
+					        if (err) throw err;
+					        console.log("1 document inserted");
+					        //db.close();
+					      });
+		        	}});
 			    
 			    console.log("converted data: " + obj);
 	        }
