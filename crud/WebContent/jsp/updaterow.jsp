@@ -8,7 +8,7 @@
 	String rowToUpdate = request.getParameter("id");
 	String Name = request.getParameter("Name");
 	String LastName = request.getParameter("Case");
-	String Hour = request.getParameter("Hour");
+	String Hour = request.getParameter("Duration");
 	String Description = request.getParameter("Description");
 	String Source = request.getParameter("Source");
 	String Confirmed = request.getParameter("Confirmed");
@@ -48,7 +48,7 @@
 			BasicDBObject  currentRecord = new BasicDBObject();
 			
 			currentRecord.put("Name",Name);
-			currentRecord.put("Hour",Hour);
+			currentRecord.put("Duration",Hour);
 			currentRecord.put("Source",Source);
 			currentRecord.put("Description",Description);
 			currentRecord.put("Confirmed",Confirmed);

@@ -179,7 +179,7 @@ a:hover {
                 datafields: [
                     { name: 'Name', type: 'string' },
                     { name: 'Case', type: 'string' },
-                    { name: 'Hour', type: 'string' },
+                    { name: 'Duration', type: 'string' },
                     { name: 'Description', type: 'String' },
                     { name: 'Source', type: 'string' },
                     { name: 'Confirmed', type: 'bool' },
@@ -314,10 +314,10 @@ a:hover {
                 			totalGroup.push(data.subGroups[i].subItems[j]);	
                 		}
                 	}
-                	aggregate = this.getcolumnaggregateddata('Hour', ['sum'], true, totalGroup);	
+                	aggregate = this.getcolumnaggregateddata('Duration', ['sum'], true, totalGroup);	
                 }
                 else{
-                	aggregate = this.getcolumnaggregateddata('Hour', ['sum'], true, data.subItems);
+                	aggregate = this.getcolumnaggregateddata('Duration', ['sum'], true, data.subItems);
                 }
                 
                 return '<div><span style="margin: 10px 10px;">' 
@@ -352,12 +352,12 @@ a:hover {
                 columns: [
                   { text: 'Name', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Name',title:false,width:'20%'},
                   { text: 'Case', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Case',title:false,width:'20%'},
-                  { text: 'Hour', columntype: 'textbox', filtercondition: 'starts_with',cellsalign: 'right', datafield: 'Hour',width:'15%',
+                  { text: 'Duration', columntype: 'textbox', filtercondition: 'starts_with',cellsalign: 'right', datafield: 'Hour',width:'15%',
                 	  aggregates: [{ 'Total Confirmed':
                           function (aggregatedValue, currentValue, column, record) {
                 		  var total = 0;
                 		  if(record['Confirmed']===true){
-                          	total = Number(record['Hour']);
+                          	total = Number(record['Duration']);
                 		  }
                           return Math.round((aggregatedValue + total)*10)/10;
                       }
@@ -365,7 +365,7 @@ a:hover {
                         function (aggregatedValue, currentValue, column, record) {
             			var total=0;
               		  if(record['Confirmed']===false){
-                        	total = Number(record['Hour']);
+                        	total = Number(record['Duration']);
               		  }
               			return Math.round((aggregatedValue + total)*10)/10;
                     }
@@ -476,7 +476,7 @@ a:hover {
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		  <a href="#">About</a>
 		  <a href="#">Setting</a>
-		  <a href="#">Dashboard</a>
+		  <a href="dashboard.html">Dashboard</a>
 		  <a href="#">Contact</a>
 		</div>
 		<div>

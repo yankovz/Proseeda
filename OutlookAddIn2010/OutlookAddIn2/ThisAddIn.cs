@@ -121,8 +121,8 @@ namespace OutlookAddIn2
             try
             {
                 //server ip
-                //String ipAddress = "127.0.0.1";
-                String ipAddress = "18.224.148.94";
+                String ipAddress = "127.0.0.1";
+                //String ipAddress = "18.224.148.94";
                 //port number
                 int portNum = 8099;
                 //@todo error handling
@@ -142,8 +142,9 @@ namespace OutlookAddIn2
                 {
                     DateTime dtStart = (DateTime)ht["time"];
                     DateTime dtEnd = DateTime.UtcNow.ToLocalTime();
-                    int hour = ((int)(dtEnd - dtStart).TotalMinutes) / 60;
-                    int minute = ((int)(dtEnd - dtStart).TotalMinutes) % 60;
+                    int time = ((int)(dtEnd - dtStart).TotalMinutes);
+                    
+                    String date = dtEnd.Month + "/" + dtEnd.Day + "/" + dtEnd.Year;
                     NetworkStream serverStream = _tcpclient.GetStream();
                     String Name = cb.SelectedItem.ToString().Substring(0, cb.SelectedItem.ToString().IndexOf(","));
                     String Case = cb.SelectedItem.ToString().Substring(cb.SelectedItem.ToString().IndexOf("(") + 1);
@@ -152,8 +153,9 @@ namespace OutlookAddIn2
                         appointment.SenderEmailAddress.IndexOf("CN") + 3);
                     String user = cn.Substring(
                         cn.IndexOf("CN") + 3);
-                    string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case + "\",\"Hour\": \"" +
-                        Convert.ToString(hour) + "." + Convert.ToString(minute) +
+                    string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +              
+                        "\",\"date\": \"" + date + "\",\"Duration\": \"" +
+                        Convert.ToString(time) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \"" + user +
                         "\",\"Source\": \"Email\",\"msgRequestInsert\":\"insert\"" +
@@ -201,8 +203,8 @@ namespace OutlookAddIn2
             try
             {
                 //server ip
-                //String ipAddress = "127.0.0.1";
-                String ipAddress = "18.224.148.94";
+                String ipAddress = "127.0.0.1";
+                //String ipAddress = "18.224.148.94";
                 //port number
                 int portNum = 8099;
                 //@todo error handling
@@ -222,15 +224,17 @@ namespace OutlookAddIn2
                 {
                     DateTime dtStart = appointment.Start;
                     DateTime dtEnd = appointment.End;
-                    int hour = ((int)(dtEnd - dtStart).TotalMinutes) / 60;
-                    int minute = ((int)(dtEnd - dtStart).TotalMinutes) % 60;
+                    String date = dtEnd.Month + "/" + dtEnd.Day + "/" + dtEnd.Year;
+                    int time = ((int)(dtEnd - dtStart).TotalMinutes);
+                    
                     NetworkStream serverStream = _tcpclient.GetStream();
                     //capturing the meeting time
                     String Name = cb.SelectedItem.ToString().Substring(0, cb.SelectedItem.ToString().IndexOf(","));
                     String Case = cb.SelectedItem.ToString().Substring(cb.SelectedItem.ToString().IndexOf("(") + 1);
                     Case = Case.Substring(0, Case.Length - 1);
-                    String clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case + "\",\"Hour\": \"" +
-                        Convert.ToString(hour) + "." + Convert.ToString(minute) +
+                    String clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case + 
+                        "\",\"date\": \""+ date+ "\",\"Duration\": \"" +
+                        Convert.ToString(time) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \"" + appointment.Organizer +
                         "\",\"Source\": \"Calender Meeting Actual Time\",\"msgRequestInsert\":\"insert\"" +
@@ -239,13 +243,15 @@ namespace OutlookAddIn2
                     byte[] outStream = Encoding.ASCII.GetBytes(clientData);
                     serverStream.Write(outStream, 0, outStream.Length);
                     serverStream.Flush();
+                    System.Threading.Thread.Sleep(100);
                     //capturing the time it took to setup a meeting
                     dtStart = (DateTime)ht["time"];
                     dtEnd = DateTime.UtcNow.ToLocalTime();
-                    hour = ((int)(dtEnd - dtStart).TotalMinutes) / 60;
-                    minute = ((int)(dtEnd - dtStart).TotalMinutes) % 60;
-                    clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case + "\",\"Hour\": \"" +
-                        Convert.ToString(hour) + "." + Convert.ToString(minute) +
+                    time = ((int)(dtEnd - dtStart).TotalMinutes);
+                    
+                    clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +              
+                        "\",\"date\": \"" + date + "\",\"Duration\": \"" +
+                        Convert.ToString(time) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \"" + appointment.Organizer +
                         "\",\"Source\": \"Calender Meeting Setup Time\",\"msgRequestInsert\":\"insert\"" +

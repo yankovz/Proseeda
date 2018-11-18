@@ -55,8 +55,8 @@
 					new JsonPrimitive(((String)jo.get("Name"))));
 			currentRecord.add("Case",
 					new JsonPrimitive(((String)jo.get("Case"))));
-			currentRecord.add("Hour",
-					new JsonPrimitive(((String)jo.get("Hour"))));
+			currentRecord.add("Duration",
+					new JsonPrimitive(((String)jo.get("Duration"))));
 			currentRecord.add("Source",
 					new JsonPrimitive(((String)jo.get("Source"))));
 			currentRecord.add("Description",
