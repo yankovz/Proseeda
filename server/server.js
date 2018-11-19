@@ -57,6 +57,51 @@ try{
 	console.log("got error: " + error);
 }
 
+function updateStats(obj){
+	console.log("1 document inserted");
+    //update avrage month data
+	var today = new Date(obj.date);
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	
+	
+	
+	
+	
+	today = mm + '/01' + '/' + yyyy;
+    var query = { userId: obj.userId, date: today };
+    
+    console.log("query avgactivitiy: userid " + obj.userId + ", date : " + today);
+    dbo.collection("avgactivitiy").findOne(query, function(err, result) {
+        if (!err && result!=null)
+        {//updating the total hour worked on month for this user
+        	//first let's delete the old recod and than insert
+        	console.log("found avrage activity");
+	        var duration = parseInt(result.Duration, 10);
+	        var currentDuration = parseInt(obj.Duration, 10);
+	        obj.Duration = duration + currentDuration;
+	        obj.date = today;
+        	dbo.collection("avgactivitiy").remove(query, function(err, result) {
+		        
+	        	dbo.collection("avgactivitiy").insertOne(obj, function(err, res) {
+			        if (err) throw err;		
+			        console.log("inserted new avrage activity");
+			        //db.close();
+			      });
+        	});
+        }
+        else{
+        	obj.date = today;
+        	dbo.collection("avgactivitiy").insertOne(obj, function(err, res) {
+		        if (err) throw err;		
+		        console.log("inserted new avrage activity");
+		        //db.close();
+		      });
+        }
+    });
+}
+
 function processQueryCustomer(obj,socket){
 	console.log("processQueryCustomer starting");
 	dbo.collection('customers').aggregate([
@@ -82,7 +127,7 @@ function processQueryCustomer(obj,socket){
 
 function processInsert(obj){
 	
-    var today = new Date();
+    var today = new Date(obj.date);
 	var dd = today.getDate();
 	var mm = today.getMonth()+1; //January is 0!
 	var yyyy = today.getFullYear();
@@ -142,8 +187,8 @@ function processInsert(obj){
 							        obj.Case=result.name;
 							        console.log("going to insert client case: " + obj.Case);
 							        dbo.collection("activities").insertOne(obj, function(err, res) {
-								        if (err) throw err;
-								        console.log("1 document inserted");
+								        if (err) throw err;		
+								        updateStats(obj);//update statistics
 								        //db.close();
 								      });
 								    
@@ -163,6 +208,7 @@ function processInsert(obj){
 				        dbo.collection("activities").insertOne(obj, function(err, res) {
 					        if (err) throw err;
 					        console.log("1 document inserted");
+					        updateStats(obj);//update statistics
 					        //db.close();
 					      });
 		        	}});
