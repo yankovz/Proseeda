@@ -121,8 +121,8 @@ namespace OutlookAddIn2
             try
             {
                 //server ip
-                String ipAddress = "127.0.0.1";
-                //String ipAddress = "18.224.148.94";
+                //String ipAddress = "127.0.0.1";
+                String ipAddress = "18.224.148.94";
                 //port number
                 int portNum = 8099;
                 //@todo error handling
@@ -203,8 +203,8 @@ namespace OutlookAddIn2
             try
             {
                 //server ip
-                String ipAddress = "127.0.0.1";
-                //String ipAddress = "18.224.148.94";
+                //String ipAddress = "127.0.0.1";
+                String ipAddress = "18.224.148.94";
                 //port number
                 int portNum = 8099;
                 //@todo error handling

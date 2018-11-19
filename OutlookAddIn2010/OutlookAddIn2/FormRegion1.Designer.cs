@@ -107,11 +107,11 @@ namespace OutlookAddIn2
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox1);
-            this.Name = "FormRegion1";
+            this.Name = "Proseeda Billing Data";
             this.Size = new System.Drawing.Size(686, 35);
             this.FormRegionShowing += new System.EventHandler(this.FormRegion1_FormRegionShowing);
             this.FormRegionClosed += new System.EventHandler(this.FormRegion1_FormRegionClosed);
-            this.ResumeLayout(false);
+            this.ResumeLayout(true);
             this.PerformLayout();
             if (this.OutlookItem is Microsoft.Office.Interop.Outlook.AppointmentItem)
             {
@@ -196,8 +196,8 @@ namespace OutlookAddIn2
             try
             {
                 //server ip
-                String ipAddress = "127.0.0.1";
-                //String ipAddress = "18.224.148.94";
+                //String ipAddress = "127.0.0.1";
+                String ipAddress = "18.224.148.94";
                 //port number
                 int portNum = 8099;
                 //@todo error handling
@@ -351,8 +351,10 @@ namespace OutlookAddIn2
         /// </summary>
         private static void InitializeManifest(Microsoft.Office.Tools.Outlook.FormRegionManifest manifest, Microsoft.Office.Tools.Outlook.Factory factory)
         {
-            manifest.FormRegionName = "FormRegion1";
+            manifest.FormRegionName = "Proseeda Billing Data";
             manifest.FormRegionType = Microsoft.Office.Tools.Outlook.FormRegionType.Adjoining;
+            manifest.ShowInspectorRead = false;
+            manifest.ShowReadingPane = false;
 
         }
 
