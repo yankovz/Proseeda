@@ -6,4 +6,15 @@ db.cases.insert([{"customerid":ObjectId("5bdac1536c7946d27c2b274e"),"name" : "Fo
 {"customerid":ObjectId("5bdac1536c7946d27c2b274e"),"name" : "Smith vs IRS (4331/82)","default":false },
 {"customerid":ObjectId("5bdac1536c7946d27c2b274f"),"name" : "Wembley Building (4337/991)" ,"default":true}])
 
-db.customersdetails.insert([{{"customerid":ObjectId("5bdac1536c7946d27c2b274e"),"phone":"0737140010"}])
+db.customersdetails.insert([{"customerid":ObjectId("5bdac1536c7946d27c2b274e"),"phone":"0737140010"}])
+
+{ "_id" : ObjectId("5bd5d0fc71d953c26ca088db"), "userId" : "ziv@proseeda.com", "userName" : "Ziv Yankowitz" }
+{ "_id" : ObjectId("5bd5d7128aa25f61d91d60bf"), "userId" : "ziv@proseeda.com", "userName" : "ZIV YANKOWITZ" }
+{ "_id" : ObjectId("5bd5d94fcf8a25701c2867ff"), "userId" : "ziv@proseeda.com", "userName" : "ZIV.YANKOWITZ" }
+{ "_id" : ObjectId("5bdb23a9e4e54ce0607e6d3a"), "userId" : "einat@proseeda.com", "userName" : "Einat Davidson" }
+{ "_id" : ObjectId("5bdb23b1e4e54ce0607e6d3b"), "userId" : "einat@proseeda.com", "userName" : "Einat.Davidson" }
+{ "_id" : ObjectId("5bdb23c5e4e54ce0607e6d3c"), "userId" : "einat@proseeda.com", "userName" : "EINAT.DAVIDSON" }
+{ "_id" : ObjectId("5bdb23cbe4e54ce0607e6d3d"), "userId" : "einat@proseeda.com", "userName" : "EINAT DAVIDSON" }
+{ "_id" : ObjectId("5bdb23e4e4e54ce0607e6d3e"), "userId" : "yuval@proseeda.com", "userName" : "YUVAL MOR" }
+{ "_id" : ObjectId("5bdb23ece4e54ce0607e6d3f"), "userId" : "yuval@proseeda.com", "userName" : "Yuval Mor" }
+{ "_id" : ObjectId("5bdb23f4e4e54ce0607e6d40"), "userId" : "yuval@proseeda.com", "userName" : "YUVAL.MOR" }
