@@ -145,6 +145,22 @@ namespace OutlookAddIn2
                     int time = ((int)(dtEnd - dtStart).TotalMinutes);
                     
                     String date = dtEnd.Month + "/" + dtEnd.Day + "/" + dtEnd.Year;
+
+                    String minute = dtEnd.Minute.ToString();
+                    if (dtEnd.Minute == 0)
+                    {
+                        minute = dtEnd.Minute + "0";
+                    };
+                    if (dtEnd.Minute == 0)
+                    {
+                        minute = dtEnd.Minute + "0";
+                    }
+                    String second = dtEnd.Second.ToString();
+                    if (dtEnd.Second == 0)
+                    {
+                        second = dtEnd.Second + "0";
+                    }
+                    String eventTime = dtEnd.Hour + ":" + minute + ":" + second;
                     NetworkStream serverStream = _tcpclient.GetStream();
                     String Name = cb.SelectedItem.ToString().Substring(0, cb.SelectedItem.ToString().IndexOf(","));
                     String Case = cb.SelectedItem.ToString().Substring(cb.SelectedItem.ToString().IndexOf("(") + 1);
@@ -153,8 +169,8 @@ namespace OutlookAddIn2
                         appointment.SenderEmailAddress.IndexOf("CN") + 3);
                     String user = cn.Substring(
                         cn.IndexOf("CN") + 3);
-                    string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +              
-                        "\",\"date\": \"" + date + "\",\"Duration\": \"" +
+                    string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
+                        "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
                         Convert.ToString(time) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \"" + user +
@@ -225,6 +241,21 @@ namespace OutlookAddIn2
                     DateTime dtStart = appointment.Start;
                     DateTime dtEnd = appointment.End;
                     String date = dtEnd.Month + "/" + dtEnd.Day + "/" + dtEnd.Year;
+                    String minute = dtEnd.Minute.ToString();
+                    if(dtEnd.Minute==0)
+                    {
+                        minute = dtEnd.Minute + "0";
+                    };
+                    if(dtEnd.Minute==0)
+                    {
+                        minute = dtEnd.Minute + "0";
+                    }
+                    String second = dtEnd.Second.ToString();
+                    if (dtEnd.Second == 0)
+                    {
+                        second = dtEnd.Second + "0";
+                    }
+                    String eventTime = dtEnd.Hour + ":" + minute + ":" + second;
                     int time = ((int)(dtEnd - dtStart).TotalMinutes);
                     
                     NetworkStream serverStream = _tcpclient.GetStream();
@@ -233,7 +264,7 @@ namespace OutlookAddIn2
                     String Case = cb.SelectedItem.ToString().Substring(cb.SelectedItem.ToString().IndexOf("(") + 1);
                     Case = Case.Substring(0, Case.Length - 1);
                     String clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case + 
-                        "\",\"date\": \""+ date+ "\",\"Duration\": \"" +
+                        "\",\"date\": \""+ date+ "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
                         Convert.ToString(time) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \"" + appointment.Organizer +
@@ -249,8 +280,8 @@ namespace OutlookAddIn2
                     dtEnd = DateTime.UtcNow.ToLocalTime();
                     time = ((int)(dtEnd - dtStart).TotalMinutes);
                     
-                    clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +              
-                        "\",\"date\": \"" + date + "\",\"Duration\": \"" +
+                    clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
+                        "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
                         Convert.ToString(time) +
                         "\", \"Description\": \"" + appointment.Subject +
                         "\",\"user\": \"" + appointment.Organizer +
