@@ -139,7 +139,8 @@ a:hover {
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxmenu.js"></script>
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.js"></script>
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.selection.js"></script> 
-    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.columnsresize.js"></script> 
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxgrid.sort.js"></script> 
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdata.js"></script>
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxnumberinput.js"></script>
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdatetimeinput.js"></script>
@@ -180,6 +181,8 @@ a:hover {
                     { name: 'Name', type: 'string' },
                     { name: 'Case', type: 'string' },
                     { name: 'Duration', type: 'string' },
+                    { name: 'Date', type: 'string' },
+                    { name: 'Time', type: 'string' },
                     { name: 'Description', type: 'String' },
                     { name: 'Source', type: 'string' },
                     { name: 'Confirmed', type: 'bool' },
@@ -323,7 +326,7 @@ a:hover {
                 return '<div><span style="margin: 10px 10px;">' 
                 + text + 
                 '</span>' +
-                '<span style="position: fixed; right: 590px">' 
+                '<span style="position: fixed; left: 514px">' 
                     +  Math.round(aggregate.sum*10)/10 + 
                     '</span></div>';
                     
@@ -337,6 +340,7 @@ a:hover {
                 source: dataAdapter,
                 columnsresize: true,
                 filterable: true,
+               sortable:true,
                 filtermode: 'excel',
                 groupable: true,
                 showstatusbar: true,
@@ -351,8 +355,8 @@ a:hover {
                 selectionmode: 'multiplecellsextended',
                 columns: [
                   { text: 'Name', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Name',title:false,width:'20%'},
-                  { text: 'Case', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Case',title:false,width:'20%'},
-                  { text: 'Duration', columntype: 'textbox', filtercondition: 'starts_with',cellsalign: 'right', datafield: 'Duration',width:'15%',
+                  { text: 'Case', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Case',title:false,width:'70px'},
+                  { text: 'Duration', columntype: 'textbox', filtercondition: 'starts_with',cellsalign: 'right', datafield: 'Duration',width:'140px',
                 	  aggregates: [{ 'Total Confirmed':
                           function (aggregatedValue, currentValue, column, record) {
                 		  var total = 0;
@@ -371,7 +375,9 @@ a:hover {
                     }
           			}
                 	  ]},
-                  { text: 'Description', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Description',title:false},
+               	  { text: 'Date', columntype: 'string', filtercondition: 'starts_with',cellsalign:'center',datafield: 'Date', title:false},
+                  { text: 'Time', columntype: 'textbox', filtercondition: 'starts_with',cellsalign:'center',datafield: 'Time', title:false},
+                  { text: 'Description', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Description', width:'100px',title:false},
                   { text: 'Source', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Source',title:false,width:'20%' },
                   { text: 'Status', datafield: 'Confirmed', cellsrenderer: cellsrenderer, columntype: 'checkbox'}
                   
@@ -390,6 +396,8 @@ a:hover {
             $("#showGrouping").on('change', function () {
                 refreshAppearance();
             });
+            
+            
             
             $("#expand").jqxButton({ theme: theme });
             $("#collapse").jqxButton({ theme: theme });
@@ -483,7 +491,7 @@ a:hover {
 	        <div id="grid" style="position:fixed; height: 85%"></div>
 	        <br />      
         	<div id="showGrouping" style="position:fixed; top:95%">Change Grouping</div>
-        	<div style="font-family: Verdana; font-style: normal; font-size: 13px; position:fixed; top:95%; left:12%">Change Theme:
+        	<div style="font-family: Verdana; font-style: normal; font-size: 13px; position:fixed; top:95%; left:25%">Change Theme:
 		        	<select id="layout" onchange="changeLayout(this.options[this.selectedIndex].value)">
 					  <option value="black">Black</option>
 					  <option value="darkblue">Blue</option>
@@ -502,7 +510,7 @@ a:hover {
 function changeLayout(selectedObject){
 	var mySelect = document.getElementById('layout');
 	var mySelect1 = document.getElementById('showGrouping');
-	showGrouping
+	
 	for(var i, j = 0; i = mySelect.options[j]; j++) {
 	    if(i.value == selectedObject) {
 	        mySelect.selectedIndex = j;
