@@ -8,26 +8,28 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+
 namespace OutlookAddIn2
 {
     [System.ComponentModel.ToolboxItemAttribute(false)]
-    partial class FormRegion1 : Microsoft.Office.Tools.Outlook.FormRegionBase
+    partial class FormRegion2 : Microsoft.Office.Tools.Outlook.FormRegionBase
     {
         private TcpClient _tcpclient;
         private System.IO.StreamReader _sReader;
         private System.IO.StreamWriter _sWriter;
-        public FormRegion1(Microsoft.Office.Interop.Outlook.FormRegion formRegion)
-            : base(Globals.Factory, formRegion)
-        {
-            this.InitializeComponent();
-        }
+
         private const string PROSEEDA = "proseeda";
         private const string Key = "combo1";
         private const string cboxKey1 = "cbox1";
         private const string cboxKey2 = "cbox2";
         private const string cboxKey3 = "cbox3";
 
-        private bool first = false;
+        public FormRegion2(Microsoft.Office.Interop.Outlook.FormRegion formRegion)
+            : base(Globals.Factory, formRegion)
+        {
+            this.InitializeComponent();
+        }
+
         /// <summary> 
         /// Required designer variable.
         /// </summary>
@@ -60,7 +62,7 @@ namespace OutlookAddIn2
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(16, 3);
+            this.checkBox1.Location = new System.Drawing.Point(36, 4);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(59, 17);
             this.checkBox1.TabIndex = 0;
@@ -73,32 +75,31 @@ namespace OutlookAddIn2
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "Please Select a Client Case:"});
-            this.comboBox1.Location = new System.Drawing.Point(90, 0);
+            this.comboBox1.Location = new System.Drawing.Point(116, 0);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(358, 21);
             this.comboBox1.TabIndex = 3;
             // 
-            // FormRegion1
+            // FormRegion2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.checkBox1);
-            this.Name = "FormRegion1";
-            this.Size = new System.Drawing.Size(686, 35);
-            this.FormRegionShowing += new System.EventHandler(this.FormRegion1_FormRegionShowing);
-            this.FormRegionClosed += new System.EventHandler(this.FormRegion1_FormRegionClosed);
+            this.Name = "FormRegion2";
+            this.Size = new System.Drawing.Size(810, 36);
+            this.FormRegionShowing += new System.EventHandler(this.FormRegion2_FormRegionShowing);
+            this.FormRegionClosed += new System.EventHandler(this.FormRegion2_FormRegionClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
         //handle state changes
         private void checkBox1_SelectedCheckedChanged(object sender, System.EventArgs e)
         {
             CheckBox comboBox = (CheckBox)sender;
             this.checkBox1.Checked = comboBox.Checked;
-            Microsoft.Office.Interop.Outlook.MailItem appointment = (Microsoft.Office.Interop.Outlook.MailItem)this.OutlookItem;
+            Microsoft.Office.Interop.Outlook.AppointmentItem appointment = (Microsoft.Office.Interop.Outlook.AppointmentItem)this.OutlookItem;
 
             Microsoft.Office.Interop.Outlook.ItemProperty prop01 = appointment.ItemProperties.Add("checkBox", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olNumber);
             if (this.checkBox1.Checked)
@@ -111,11 +112,7 @@ namespace OutlookAddIn2
             }
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void getCustomerDetails()
         {
             try
@@ -217,7 +214,7 @@ namespace OutlookAddIn2
             // Save the selected employee's name, because we will remove
             // the employee's name from the list.
             string selectedEmployee = (string)comboBox.SelectedItem;
-
+           
 
             int resultIndex = -1;
 
@@ -226,7 +223,7 @@ namespace OutlookAddIn2
             resultIndex = comboBox.FindStringExact(selectedEmployee);
 
             this.comboBox1.SelectedIndex = resultIndex;
-            Microsoft.Office.Interop.Outlook.MailItem appointment = (Microsoft.Office.Interop.Outlook.MailItem)this.OutlookItem;
+            Microsoft.Office.Interop.Outlook.AppointmentItem appointment = (Microsoft.Office.Interop.Outlook.AppointmentItem)this.OutlookItem;
             Microsoft.Office.Interop.Outlook.ItemProperty propEmp = appointment.ItemProperties.Add("SelectedItem", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olText);
             propEmp.Value = (string)comboBox.SelectedItem;
 
@@ -246,28 +243,27 @@ namespace OutlookAddIn2
         {
             manifest.FormRegionName = "Proseeda Billing Data";
             manifest.FormRegionType = Microsoft.Office.Tools.Outlook.FormRegionType.Adjoining;
-            manifest.ShowInspectorRead = false;
-            manifest.ShowReadingPane = false;
 
         }
 
         #endregion
 
-        private CheckBox checkBox1;
-        private ComboBox comboBox1;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.ComboBox comboBox1;
 
-        public partial class FormRegion1Factory : Microsoft.Office.Tools.Outlook.IFormRegionFactory
+        public partial class FormRegion2Factory : Microsoft.Office.Tools.Outlook.IFormRegionFactory
         {
+
             public event Microsoft.Office.Tools.Outlook.FormRegionInitializingEventHandler FormRegionInitializing;
 
             private Microsoft.Office.Tools.Outlook.FormRegionManifest _Manifest;
 
             [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public FormRegion1Factory()
+            public FormRegion2Factory()
             {
                 this._Manifest = Globals.Factory.CreateFormRegionManifest();
-                FormRegion1.InitializeManifest(this._Manifest, Globals.Factory);
-                this.FormRegionInitializing += new Microsoft.Office.Tools.Outlook.FormRegionInitializingEventHandler(this.FormRegion1Factory_FormRegionInitializing);
+                FormRegion2.InitializeManifest(this._Manifest, Globals.Factory);
+                this.FormRegionInitializing += new Microsoft.Office.Tools.Outlook.FormRegionInitializingEventHandler(this.FormRegion2Factory_FormRegionInitializing);
             }
 
             [System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -282,7 +278,7 @@ namespace OutlookAddIn2
             [System.Diagnostics.DebuggerNonUserCodeAttribute()]
             Microsoft.Office.Tools.Outlook.IFormRegion Microsoft.Office.Tools.Outlook.IFormRegionFactory.CreateFormRegion(Microsoft.Office.Interop.Outlook.FormRegion formRegion)
             {
-                FormRegion1 form = new FormRegion1(formRegion);
+                FormRegion2 form = new FormRegion2(formRegion);
                 form.Factory = this;
                 if (ThisAddIn.customerData.Count == 0)
                     form.getCustomerDetails();
@@ -296,20 +292,19 @@ namespace OutlookAddIn2
 
 
                 }
-
-                if (form.OutlookItem is Microsoft.Office.Interop.Outlook.MailItem)
+                
+                if (form.OutlookItem is Microsoft.Office.Interop.Outlook.AppointmentItem)
                 {
-                    Microsoft.Office.Interop.Outlook.MailItem appointment = (Microsoft.Office.Interop.Outlook.MailItem)form.OutlookItem;
-
-
+                    Microsoft.Office.Interop.Outlook.AppointmentItem appointment = (Microsoft.Office.Interop.Outlook.AppointmentItem)form.OutlookItem;
+                    
+                    
                     Microsoft.Office.Interop.Outlook.ItemProperty prop01 = appointment.ItemProperties["selectedIndex"];
                     if (prop01 != null)
                     {
                         try
                         {
                             form.comboBox1.SelectedIndex = (int)prop01.Value;
-                        }
-                        catch (Exception e)
+                        }catch(Exception e)
                         {
                             e.ToString();
                         }
@@ -321,7 +316,7 @@ namespace OutlookAddIn2
                         form.comboBox1.SelectedIndex = 0;
                     }
 
-
+                    
                     Microsoft.Office.Interop.Outlook.ItemProperty prop02 = appointment.ItemProperties["checkBox"];
                     if (prop02 != null)
                     {
@@ -336,33 +331,33 @@ namespace OutlookAddIn2
                             {
                                 form.checkBox1.Checked = false;
                             }
-                        }
-                        catch (Exception e)
+                        }catch(Exception e)
                         {
                             e.ToString();
                         }
                     }
 
-
+                        
                     else
                     {
 
-
+                        
                         prop02 = appointment.ItemProperties.Add("checkBox", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olNumber);
                         prop02.Value = 0;
 
-
-
+                        
+                        
                     }
                     Microsoft.Office.Interop.Outlook.ItemProperty propTime = appointment.ItemProperties.Add("time", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olText);
                     propTime.Value = DateTime.UtcNow.ToLocalTime();
 
 
                 }
+                
                 form.comboBox1.SelectedIndexChanged += new System.EventHandler(form.comboBox1_SelectedIndexChanged);
                 form.checkBox1.CheckedChanged += new System.EventHandler(form.checkBox1_SelectedCheckedChanged);
 
-                
+
                 
                 return form;
             }
@@ -401,18 +396,17 @@ namespace OutlookAddIn2
 
     partial class WindowFormRegionCollection
     {
-        internal FormRegion1 FormRegion1
+        internal FormRegion2 FormRegion2
         {
             get
             {
                 foreach (var item in this)
                 {
-                    if (item.GetType() == typeof(FormRegion1))
-                        return (FormRegion1)item;
+                    if (item.GetType() == typeof(FormRegion2))
+                        return (FormRegion2)item;
                 }
                 return null;
             }
         }
-
     }
 }

@@ -114,9 +114,7 @@ namespace OutlookAddIn2
         {
             // Data buffer for incoming data.  
             byte[] bytes = new byte[1024];
-            //get client name
-            Hashtable ht = (Hashtable)OutlookAddIn2.ThisAddIn.ht[PROSEEDA];
-            ComboBox cb = (ComboBox)ht[Key];
+            
             // Connect to a remote device.  
             try
             {
@@ -140,7 +138,16 @@ namespace OutlookAddIn2
                 }
                 try
                 {
-                    DateTime dtStart = (DateTime)ht["time"];
+                    Microsoft.Office.Interop.Outlook.ItemProperty propTime = appointment.ItemProperties["time"];
+                    DateTime dtStart;
+                    if (propTime != null)
+                    {
+                        dtStart = Convert.ToDateTime(propTime.Value);
+                    }
+                    else
+                    {
+                        dtStart = DateTime.UtcNow.ToLocalTime();
+                    }
                     DateTime dtEnd = DateTime.UtcNow.ToLocalTime();
                     int time = ((int)(dtEnd - dtStart).TotalMinutes);
                     
@@ -162,25 +169,29 @@ namespace OutlookAddIn2
                     }
                     String eventTime = dtEnd.Hour + ":" + minute + ":" + second;
                     NetworkStream serverStream = _tcpclient.GetStream();
-                    String Name = cb.SelectedItem.ToString().Substring(0, cb.SelectedItem.ToString().IndexOf(","));
-                    String Case = cb.SelectedItem.ToString().Substring(cb.SelectedItem.ToString().IndexOf("(") + 1);
-                    Case = Case.Substring(0, Case.Length - 1);
-                    String cn = appointment.SenderEmailAddress.Substring(
-                        appointment.SenderEmailAddress.IndexOf("CN") + 3);
-                    String user = cn.Substring(
-                        cn.IndexOf("CN") + 3);
-                    string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
-                        "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
-                        Convert.ToString(time) +
-                        "\", \"Description\": \"" + appointment.Subject +
-                        "\",\"user\": \"" + user +
-                        "\",\"Source\": \"Email\",\"msgRequestInsert\":\"insert\"" +
-                        "}";
+                    Microsoft.Office.Interop.Outlook.ItemProperty prop02 = appointment.ItemProperties["SelectedItem"];
+                    if (prop02 != null)
+                    {
+                        String Name = prop02.Value.ToString().Substring(0, prop02.Value.ToString().IndexOf(","));
+                        String Case = prop02.Value.ToString().Substring(prop02.Value.ToString().IndexOf("(") + 1);
+                        Case = Case.Substring(0, Case.Length - 1);
+                        String cn = appointment.SenderEmailAddress.Substring(
+                            appointment.SenderEmailAddress.IndexOf("CN") + 3);
+                        String user = cn.Substring(
+                            cn.IndexOf("CN") + 3);
+                        string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
+                            "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
+                            Convert.ToString(time) +
+                            "\", \"Description\": \"" + appointment.Subject +
+                            "\",\"user\": \"" + user +
+                            "\",\"Source\": \"Email\",\"msgRequestInsert\":\"insert\"" +
+                            "}";
 
 
-                    byte[] outStream = Encoding.ASCII.GetBytes(clientData);
-                    serverStream.Write(outStream, 0, outStream.Length);
-                    serverStream.Flush();
+                        byte[] outStream = Encoding.ASCII.GetBytes(clientData);
+                        serverStream.Write(outStream, 0, outStream.Length);
+                        serverStream.Flush();
+                    }
 
 
                     _sWriter.Close();
@@ -212,9 +223,7 @@ namespace OutlookAddIn2
         {
             // Data buffer for incoming data.  
             byte[] bytes = new byte[1024];
-            //get client name
-            Hashtable ht = (Hashtable)OutlookAddIn2.ThisAddIn.ht[appointment.GlobalAppointmentID];
-            ComboBox cb = (ComboBox)ht[Key];
+            
             // Connect to a remote device.  
             try
             {
@@ -260,38 +269,50 @@ namespace OutlookAddIn2
                     
                     NetworkStream serverStream = _tcpclient.GetStream();
                     //capturing the meeting time
-                    String Name = cb.SelectedItem.ToString().Substring(0, cb.SelectedItem.ToString().IndexOf(","));
-                    String Case = cb.SelectedItem.ToString().Substring(cb.SelectedItem.ToString().IndexOf("(") + 1);
-                    Case = Case.Substring(0, Case.Length - 1);
-                    String clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case + 
-                        "\",\"date\": \""+ date+ "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
-                        Convert.ToString(time) +
-                        "\", \"Description\": \"" + appointment.Subject +
-                        "\",\"user\": \"" + appointment.Organizer +
-                        "\",\"Source\": \"Calender Meeting Actual Time\",\"msgRequestInsert\":\"insert\"" +
-                        "}";
+                    Microsoft.Office.Interop.Outlook.ItemProperty prop02 = appointment.ItemProperties["SelectedItem"];
+                    if (prop02 != null)
+                    {
+                        String Name = prop02.Value.ToString().Substring(0, prop02.Value.ToString().IndexOf(","));
+                        String Case = prop02.Value.ToString().Substring(prop02.Value.ToString().IndexOf("(") + 1);
+                        Case = Case.Substring(0, Case.Length - 1);
+                        String clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
+                            "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
+                            Convert.ToString(time) +
+                            "\", \"Description\": \"" + appointment.Subject +
+                            "\",\"user\": \"" + appointment.Organizer +
+                            "\",\"Source\": \"Calender Meeting Actual Time\",\"msgRequestInsert\":\"insert\"" +
+                            "}";
 
-                    byte[] outStream = Encoding.ASCII.GetBytes(clientData);
-                    serverStream.Write(outStream, 0, outStream.Length);
-                    serverStream.Flush();
-                    System.Threading.Thread.Sleep(100);
-                    //capturing the time it took to setup a meeting
-                    dtStart = (DateTime)ht["time"];
-                    dtEnd = DateTime.UtcNow.ToLocalTime();
-                    time = ((int)(dtEnd - dtStart).TotalMinutes);
-                    
-                    clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
-                        "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
-                        Convert.ToString(time) +
-                        "\", \"Description\": \"" + appointment.Subject +
-                        "\",\"user\": \"" + appointment.Organizer +
-                        "\",\"Source\": \"Calender Meeting Setup Time\",\"msgRequestInsert\":\"insert\"" +
-                        "}";
+                        byte[] outStream = Encoding.ASCII.GetBytes(clientData);
+                        serverStream.Write(outStream, 0, outStream.Length);
+                        serverStream.Flush();
+                        System.Threading.Thread.Sleep(100);
+                        //capturing the time it took to setup a meeting
+                        Microsoft.Office.Interop.Outlook.ItemProperty propTime = appointment.ItemProperties["time"];
+                        if (propTime != null)
+                        {
+                            dtStart = Convert.ToDateTime(propTime.Value);
+                        }
+                        else
+                        {
+                            dtStart = DateTime.UtcNow.ToLocalTime();
+                        }
+                        dtEnd = DateTime.UtcNow.ToLocalTime();
+                        time = ((int)(dtEnd - dtStart).TotalMinutes);
+
+                        clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
+                            "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
+                            Convert.ToString(time) +
+                            "\", \"Description\": \"" + appointment.Subject +
+                            "\",\"user\": \"" + appointment.Organizer +
+                            "\",\"Source\": \"Calender Meeting Setup Time\",\"msgRequestInsert\":\"insert\"" +
+                            "}";
 
 
-                    outStream = Encoding.ASCII.GetBytes(clientData);
-                    serverStream.Write(outStream, 0, outStream.Length);
-                    serverStream.Flush();
+                        outStream = Encoding.ASCII.GetBytes(clientData);
+                        serverStream.Write(outStream, 0, outStream.Length);
+                        serverStream.Flush();
+                    }
 
 
                     _sWriter.Close();
