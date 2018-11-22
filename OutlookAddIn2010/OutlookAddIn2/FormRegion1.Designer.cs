@@ -351,7 +351,7 @@ namespace OutlookAddIn2
                         prop02 = appointment.ItemProperties.Add("checkBox", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olNumber);
                         prop02.Value = 0;
 
-
+                         
 
                     }
                     Microsoft.Office.Interop.Outlook.ItemProperty propTime = appointment.ItemProperties.Add("time", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olText);

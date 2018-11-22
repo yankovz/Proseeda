@@ -113,7 +113,7 @@ namespace OutlookAddIn2
         private void StartClient(Outlook.MailItem appointment)
         {
             // Data buffer for incoming data.  
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[1024]; 
             
             // Connect to a remote device.  
             try
