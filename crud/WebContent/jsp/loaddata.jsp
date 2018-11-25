@@ -3,6 +3,7 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="com.google.gson.*"%>
 <%@ page import="com.mongodb.*"%>
+<%@ page import="java.text.*"%>
 <%
 	// (A) database connection
 	// "jdbc:mysql://localhost:3306/northwind" - the database url of the form jdbc:subprotocol:subname
@@ -59,8 +60,10 @@
 					new JsonPrimitive(((String)jo.get("date"))));
 			currentRecord.add("Time",
 					new JsonPrimitive(((String)jo.get("time"))));
+			DecimalFormat df = new DecimalFormat("####.#");
+			double duration = Double.parseDouble(((String)jo.get("Duration")))/60; 
 			currentRecord.add("Duration",
-					new JsonPrimitive(((String)jo.get("Duration"))));
+					new JsonPrimitive(df.format(duration)));
 			currentRecord.add("Source",
 					new JsonPrimitive(((String)jo.get("Source"))));
 			currentRecord.add("Description",

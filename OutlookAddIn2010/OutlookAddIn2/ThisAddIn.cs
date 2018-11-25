@@ -17,7 +17,7 @@ namespace OutlookAddIn2
 {
     public partial class ThisAddIn
     {
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         static public Hashtable ht = new Hashtable();//temp persistance for meeting content
         private const string PROSEEDA = "proseeda";
         private const string Key = "combo1";
@@ -44,6 +44,12 @@ namespace OutlookAddIn2
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            log4net.Config.BasicConfigurator.Configure(
+                new log4net.Appender.FileAppender(
+                    new log4net.Layout.PatternLayout("%d [%t]%-5p %c [%x] - %m%n"),
+                    @"c:\temp\proseeda\myapp1.log"));
+
+            log.Info("ThisAddIn_Startup:: started");
             inspectors = this.Application.Inspectors;
 
             /*inspectors.NewInspector +=
@@ -64,14 +70,14 @@ namespace OutlookAddIn2
             
             sent = outlookNameSpace.GetDefaultFolder(
                     Microsoft.Office.Interop.Outlook.
-                    OlDefaultFolders.olFolderOutbox);
-
+                    OlDefaultFolders.olFolderSentMail);
+            
             itemsSent = sent.Items;
 
             itemsSent.ItemAdd +=
                 new Outlook.ItemsEvents_ItemAddEventHandler(items_ItemAdd);//register the event handler for calender meeting
+            log.Info("ThisAddIn_Startup:: completed : " + itemsSent.Count);
 
-            
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
@@ -82,42 +88,49 @@ namespace OutlookAddIn2
 
         void items_ItemAdd(object Item)
         {
-
-            if (Item is Outlook.AppointmentItem)
+            try
             {
-
-                if (Item != null)
+                log.Info("items_ItemAdd:: started");
+                if (Item is Outlook.AppointmentItem)
                 {
-                    Outlook.AppointmentItem appointment = (Outlook.AppointmentItem)Item;
 
-                    StartClient(appointment);
+                    if (Item != null)
+                    {
+                        Outlook.AppointmentItem appointment = (Outlook.AppointmentItem)Item;
+
+                        StartClient(appointment);
+
+                    }
 
                 }
+                if (Item is Outlook.MailItem)
+                {
 
+                    if (Item != null)
+                    {
+                        Outlook.MailItem appointment = (Outlook.MailItem)Item;
+
+                        StartClient(appointment);
+
+                    }
+
+
+                }
+                log.Info("items_ItemAdd:: completed");
             }
-            if (Item is Outlook.MailItem)
+            catch(Exception ex)
             {
-
-                if (Item != null)
-                {
-                    Outlook.MailItem appointment = (Outlook.MailItem)Item;
-
-                    StartClient(appointment);
-
-                }
-
-
+                log.Error("ProseedaAddin Error : " + ex.Message + ", " + ex.ToString() + "\n" + ex.StackTrace);
             }
         }
 
         private void StartClient(Outlook.MailItem appointment)
         {
+            log.Info("StartClient::MailItem started");
             // Data buffer for incoming data.  
             byte[] bytes = new byte[1024]; 
             
             // Connect to a remote device.  
-            try
-            {
                 //server ip
                 //String ipAddress = "127.0.0.1";
                 String ipAddress = "18.224.148.94";
@@ -125,60 +138,61 @@ namespace OutlookAddIn2
                 int portNum = 8099;
                 //@todo error handling
 
-                try
-                {
-                    _tcpclient = new TcpClient();
-                    _tcpclient.Connect(ipAddress, portNum);
+                
+                _tcpclient = new TcpClient();
+                _tcpclient.Connect(ipAddress, portNum);
 
 
-                }
-                catch (Exception ex)
+                
+                Microsoft.Office.Interop.Outlook.ItemProperty propTime = appointment.ItemProperties["time"];
+                DateTime dtStart;
+                if (propTime != null)
                 {
-                    MessageBox.Show(ex.Message);
+                    dtStart = Convert.ToDateTime(propTime.Value);
                 }
-                try
+                else
                 {
-                    Microsoft.Office.Interop.Outlook.ItemProperty propTime = appointment.ItemProperties["time"];
-                    DateTime dtStart;
-                    if (propTime != null)
-                    {
-                        dtStart = Convert.ToDateTime(propTime.Value);
-                    }
-                    else
-                    {
-                        dtStart = DateTime.UtcNow.ToLocalTime();
-                    }
-                    DateTime dtEnd = DateTime.UtcNow.ToLocalTime();
-                    int time = ((int)(dtEnd - dtStart).TotalMinutes);
+                    dtStart = DateTime.UtcNow.ToLocalTime();
+                }
+                DateTime dtEnd = DateTime.UtcNow.ToLocalTime();
+                int time = ((int)(dtEnd - dtStart).TotalMinutes);
                     
-                    String date = dtEnd.Month + "/" + dtEnd.Day + "/" + dtEnd.Year;
+                String date = dtEnd.Month + "/" + dtEnd.Day + "/" + dtEnd.Year;
 
-                    String minute = dtEnd.Minute.ToString();
-                    if (dtEnd.Minute == 0)
+                String minute = dtEnd.Minute.ToString();
+                if (dtEnd.Minute == 0)
+                {
+                    minute = dtEnd.Minute + "0";
+                };
+                if (dtEnd.Minute == 0)
+                {
+                    minute = dtEnd.Minute + "0";
+                }
+                String second = dtEnd.Second.ToString();
+                if (dtEnd.Second == 0)
+                {
+                    second = dtEnd.Second + "0";
+                }
+                log.Info("StartClient::MailItem started2");
+                String eventTime = dtEnd.Hour + ":" + minute + ":" + second;
+                NetworkStream serverStream = _tcpclient.GetStream();
+                Microsoft.Office.Interop.Outlook.ItemProperty prop02 = appointment.ItemProperties["SelectedItem"];
+                if (prop02 != null)
+                {
+                
+                    String Name = prop02.Value.ToString().Substring(0, prop02.Value.ToString().IndexOf(","));
+                    String Case = prop02.Value.ToString().Substring(prop02.Value.ToString().IndexOf("(") + 1);
+                    Case = Case.Substring(0, Case.Length - 1);
+                    try
                     {
-                        minute = dtEnd.Minute + "0";
-                    };
-                    if (dtEnd.Minute == 0)
-                    {
-                        minute = dtEnd.Minute + "0";
-                    }
-                    String second = dtEnd.Second.ToString();
-                    if (dtEnd.Second == 0)
-                    {
-                        second = dtEnd.Second + "0";
-                    }
-                    String eventTime = dtEnd.Hour + ":" + minute + ":" + second;
-                    NetworkStream serverStream = _tcpclient.GetStream();
-                    Microsoft.Office.Interop.Outlook.ItemProperty prop02 = appointment.ItemProperties["SelectedItem"];
-                    if (prop02 != null)
-                    {
-                        String Name = prop02.Value.ToString().Substring(0, prop02.Value.ToString().IndexOf(","));
-                        String Case = prop02.Value.ToString().Substring(prop02.Value.ToString().IndexOf("(") + 1);
-                        Case = Case.Substring(0, Case.Length - 1);
-                        String cn = appointment.SenderEmailAddress.Substring(
-                            appointment.SenderEmailAddress.IndexOf("CN") + 3);
-                        String user = cn.Substring(
-                            cn.IndexOf("CN") + 3);
+                    log.Info("ThisAdding::sendemail: " + appointment.SenderName +"," +
+                        appointment.SenderEmailAddress +
+                        ", " + appointment.ToString());
+                    //String cn = appointment.SenderEmailAddress.Substring(
+                    //    appointment.SenderEmailAddress.IndexOf("CN") + 3);
+                    //String user = cn.Substring(
+                    //    cn.IndexOf("CN") + 3);
+                    String user = "Einat Davidson";
                         string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
                             "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
                             Convert.ToString(time) +
@@ -186,36 +200,35 @@ namespace OutlookAddIn2
                             "\",\"user\": \"" + user +
                             "\",\"Source\": \"Email\",\"msgRequestInsert\":\"insert\"" +
                             "}";
+                    
 
-
-                        byte[] outStream = Encoding.ASCII.GetBytes(clientData);
-                        serverStream.Write(outStream, 0, outStream.Length);
-                        serverStream.Flush();
+                    log.Info("StartClient::MailItem started3 : " + clientData);
+                    byte[] outStream = Encoding.ASCII.GetBytes(clientData);
+                    log.Info("StartClient::MailItem started4 : " + Encoding.ASCII.GetString(outStream));
+                    if (serverStream == null)
+                    {
+                        log.Info("StartClient::MailItem server stream is null ");
                     }
-
-
-                    _sWriter.Close();
+                    serverStream.Write(outStream, 0, outStream.Length);
+                    log.Info("ThisAddin :: after write");
+                    serverStream.Flush();
+                    log.Info("ThisAddin :: after flush");
                     _tcpclient.Close();
-
+                    log.Info("ThisAddin :: after close");
                 }
-                catch (ArgumentNullException ane)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+                    log.Error("ThisAddin::Email Error: " + ex.ToString() + ", " + ex.StackTrace + ", " + ex.InnerException);
                 }
-                catch (SocketException se)
-                {
-                    Console.WriteLine("SocketException : {0}", se.ToString());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unexpected exception : {0}", e.ToString());
-                }
-
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+
+
+                
+                
+
+                
+
+            
         }
     
 
@@ -243,7 +256,7 @@ namespace OutlookAddIn2
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    log.Error(ex.Message);
                 }
                 try
                 {
@@ -319,23 +332,16 @@ namespace OutlookAddIn2
                     _tcpclient.Close();
 
                 }
-                catch (ArgumentNullException ane)
-                {
-                    Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-                }
-                catch (SocketException se)
-                {
-                    Console.WriteLine("SocketException : {0}", se.ToString());
-                }
+                
                 catch (Exception e)
                 {
-                    Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                    log.Error(e.ToString());
                 }
 
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                log.Error(e.ToString());
             }
         }
         #region VSTO generated code
