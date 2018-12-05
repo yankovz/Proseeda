@@ -68,6 +68,21 @@
 					new JsonPrimitive(((String)jo.get("Source"))));
 			currentRecord.add("Description",
 					new JsonPrimitive(((String)jo.get("Description"))));
+			if(jo.get("Details")!=null)
+			{
+				currentRecord.add("body",
+						new JsonPrimitive(((String)jo.get("Details"))));
+			}
+			if(jo.get("To")!=null)
+			{
+				currentRecord.add("To",
+						new JsonPrimitive(((String)jo.get("To"))));
+			}
+			else
+			{
+				currentRecord.add("To",
+						new JsonPrimitive(new String("NA")));
+			}
 			currentRecord.add("Confirmed",
 					new JsonPrimitive(((String)jo.get("Confirmed").toString())));
 			recordsArray.add(currentRecord);

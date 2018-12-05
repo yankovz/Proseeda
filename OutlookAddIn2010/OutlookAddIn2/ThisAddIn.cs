@@ -44,10 +44,10 @@ namespace OutlookAddIn2
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            log4net.Config.BasicConfigurator.Configure(
-                new log4net.Appender.FileAppender(
-                    new log4net.Layout.PatternLayout("%d [%t]%-5p %c [%x] - %m%n"),
-                    @"c:\temp\proseeda\myapp1.log"));
+            log4net.Appender.FileAppender fa = new log4net.Appender.FileAppender();
+            fa.File = @"c:\temp\proseeda\myapp1.log";
+            fa.Layout = new log4net.Layout.PatternLayout("%d [%t]%-5p %c [%x] - %m%n");
+            log4net.Config.BasicConfigurator.Configure(fa);
 
             log.Info("ThisAddIn_Startup:: started");
             inspectors = this.Application.Inspectors;
@@ -70,7 +70,7 @@ namespace OutlookAddIn2
             
             sent = outlookNameSpace.GetDefaultFolder(
                     Microsoft.Office.Interop.Outlook.
-                    OlDefaultFolders.olFolderSentMail);
+                    OlDefaultFolders.olFolderOutbox);
             
             itemsSent = sent.Items;
 
@@ -97,8 +97,13 @@ namespace OutlookAddIn2
                     if (Item != null)
                     {
                         Outlook.AppointmentItem appointment = (Outlook.AppointmentItem)Item;
-
-                        StartClient(appointment);
+                        Microsoft.Office.Interop.Outlook.ItemProperty prop01 = appointment.ItemProperties.Add("checkBox", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olNumber);
+                        if (prop01.Value==1)
+                        {
+                            StartClient(appointment);
+                        }
+                        
+                        
 
                     }
 
@@ -110,7 +115,11 @@ namespace OutlookAddIn2
                     {
                         Outlook.MailItem appointment = (Outlook.MailItem)Item;
 
-                        StartClient(appointment);
+                        Microsoft.Office.Interop.Outlook.ItemProperty prop01 = appointment.ItemProperties.Add("checkBox", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olNumber);
+                        if (prop01.Value == 1)
+                        {
+                            StartClient(appointment);
+                        }
 
                     }
 
@@ -192,12 +201,18 @@ namespace OutlookAddIn2
                     //    appointment.SenderEmailAddress.IndexOf("CN") + 3);
                     //String user = cn.Substring(
                     //    cn.IndexOf("CN") + 3);
-                    String user = "Einat Davidson";
+
+                    String body = appointment.Body.Replace(",", " ");
+                    body = body.Replace("\n", " ");
+                    body = body.Replace("\r", " ");
+                    String user = "Ziv Yankowitz";
                         string clientData = "{\"Name\": \"" + Name + "\",\"Case\": \"" + Case +
                             "\",\"date\": \"" + date + "\",\"time\":\"" + eventTime + "\",\"Duration\": \"" +
                             Convert.ToString(time) +
-                            "\", \"Description\": \"" + appointment.Subject +
+                            "\", \"Description\": \"" + appointment.Subject  +
                             "\",\"user\": \"" + user +
+                            "\",\"Details\": \"" + body +
+                            "\",\"To\": \"" + appointment.To +
                             "\",\"Source\": \"Email\",\"msgRequestInsert\":\"insert\"" +
                             "}";
                     
@@ -293,6 +308,7 @@ namespace OutlookAddIn2
                             Convert.ToString(time) +
                             "\", \"Description\": \"" + appointment.Subject +
                             "\",\"user\": \"" + appointment.Organizer +
+                            "\",\"To\": \"" + appointment.Recipients.ToString() +
                             "\",\"Source\": \"Calender Meeting Actual Time\",\"msgRequestInsert\":\"insert\"" +
                             "}";
 
@@ -318,6 +334,7 @@ namespace OutlookAddIn2
                             Convert.ToString(time) +
                             "\", \"Description\": \"" + appointment.Subject +
                             "\",\"user\": \"" + appointment.Organizer +
+                            "\",\"To\": \"" + appointment.Recipients.ToString() +
                             "\",\"Source\": \"Calender Meeting Setup Time\",\"msgRequestInsert\":\"insert\"" +
                             "}";
 

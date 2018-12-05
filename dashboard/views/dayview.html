@@ -16,9 +16,36 @@ body {
     
 }
 
+.jqx-grid-cell-left-align-tool {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 2px; 
+    text-align: left; 
+    margin-right: 2px; 
+    margin-left: 4px;
+}
 
+.jqx-grid-cell-left-align-tool .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    bottom: 100%;
+    border-radius: 6px;
+    padding-bottom: 2px; 
+    height: 120px;
+    left: 0px;
+    text-align: left; 
+    
+	position: absolute;
+    /* Position the tooltip */
+    
+    z-index: 0;
+}
 
-
+.jqx-grid-cell-left-align-tool:hover .tooltiptext {
+    visibility: visible;
+}
 
 .sidenav {
     height: 100%;
@@ -162,7 +189,7 @@ a:hover {
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdatetimeinput.js"></script>
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcheckbox.js"></script>
     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/globalization/globalize.js"></script>
-    
+     <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxtabs.js"></script>
 
 <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxcore.js"></script>
 <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/jqxdatetimeinput.js"></script>
@@ -170,6 +197,15 @@ a:hover {
 <script type="text/javascript" src="jqwidgets-ver6.1.0/jqwidgets/globalization/globalize.js"></script>
     
     <script type="text/javascript">
+	    function mOver(obj,data,index)
+	    {
+	    	$("#jqxGrid").jqxGrid('setcellvalue', index, "Description", data);
+	    }
+	
+	    function mOut(obj,data,index)
+	    {
+	    	$("#jqxGrid").jqxGrid('setcellvalue', index, "Description", data);
+	    }
         $(document).ready(function () {
             var url = "jsp/loaddata.jsp";
 
@@ -184,6 +220,8 @@ a:hover {
                     { name: 'Date', type: 'string' },
                     { name: 'Time', type: 'string' },
                     { name: 'Description', type: 'String' },
+                    { name: 'body', type: 'String' },
+                    { name: 'To', type: 'String' },
                     { name: 'Source', type: 'string' },
                     { name: 'Confirmed', type: 'bool' },
                 ],
@@ -238,10 +276,15 @@ a:hover {
                 
             };
             var cellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
-               //console.log("asd");
+               console.log("asd");
+               var toRet = '<div class="jqx-grid-cell-left-align-tool" onmouseover="mOver(this,\''+rowdata.body+'\','+row+')" onmouseout="mOut(this,\''+value+'\','+row+')" style="margin-top: 8px;">' + value + 
+               '</div>';
+               return toRet
                //return '<span style="color: #008000;">' + value + '</span>';
                //return '<div class="jqx-checkbox-default" style="color: #008000; margin-top: 8px;">'+ value + '</div>'  
             }
+            
+            
             var dataAdapter = new $.jqx.dataAdapter(source,
             	    {
             	formatData: function (data) {
@@ -331,7 +374,37 @@ a:hover {
                     '</span></div>';
                     
             }
-            
+            var initrowdetails = function (index, parentElement, gridElement, datarecord) {
+            	var tabsdiv = null;
+                var information = null;
+                var notes = null;
+                tabsdiv = $($(parentElement).children()[0]);
+                if (tabsdiv != null) {
+                    information = tabsdiv.find('.information');
+                    var title = tabsdiv.find('.title');
+                    title.text("Detailed Information");                    
+                    var container = $('<div style="margin: 5px;"></div>')
+                    container.appendTo($(information));
+                    
+                    var leftcolumn = $('<div style="float: left; width: 45%;"></div>');
+                    var rightcolumn = $('<div style="float: left; width: 40%;"></div>');
+                    
+                    container.append(leftcolumn);
+                    container.append(rightcolumn);
+                    
+                    var name = "<div style='margin: 10px;'><b>Customer Name:</b> " + datarecord.Name + "</div>";
+                    var caseId = "<div style='margin: 10px;'><b>Case Name:</b> " + datarecord.Case + "</div>";
+                    var subject = "<div style='margin: 10px;'><b>Subject:</b> " + datarecord.Description + "</div>";
+                    var address = "<div style='margin: 10px;'><b>TO:</b> " + datarecord.To + "</div>";
+                    $(leftcolumn).append(name);
+                    $(leftcolumn).append(caseId);
+                    $(leftcolumn).append(subject);
+                    $(leftcolumn).append(address);
+                    var content = "<div style='margin: 10px;'><b>content:</b> " + datarecord.body + "</div>";
+                    $(rightcolumn).append(content);
+                    $(tabsdiv).jqxTabs({ width: 750, height: 170, theme: 'black'});
+                }
+            }
             
             $("#grid").jqxGrid(
             {
@@ -353,6 +426,10 @@ a:hover {
                 altrows: true,
                 enabletooltips: true,
                 selectionmode: 'multiplecellsextended',
+                rowdetails: true,
+                rowdetailstemplate: { rowdetails: "<div style='margin: 10px;'><ul style='margin-left: 30px;'><li class='title'></li></ul><div class='information'></div><div class='notes'></div></div>", rowdetailsheight: 200 },
+                
+                initrowdetails: initrowdetails,
                 columns: [
                   { text: 'Name', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Name',title:false,width:'20%'},
                   { text: 'Case', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Case',title:false,width:'70px'},
@@ -377,14 +454,17 @@ a:hover {
                 	  ]},
                	  { text: 'Date', columntype: 'string', filtercondition: 'starts_with',cellsalign:'center',datafield: 'Date', title:false},
                   { text: 'Time', columntype: 'textbox', filtercondition: 'starts_with',cellsalign:'center',datafield: 'Time', title:false},
-                  { text: 'Description', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Description', width:'100px',title:false},
+                  { text: 'Description', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Description',cellsrenderer:cellsrenderer, width:'100px',title:false},
                   { text: 'Source', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Source',title:false,width:'20%' },
-                  { text: 'Status', datafield: 'Confirmed', cellsrenderer: cellsrenderer, columntype: 'checkbox'}
+                  { text: 'Status', datafield: 'Confirmed',  columntype: 'checkbox'}
                   
               ],
               	
             	groups: ['Name','Case']
             });
+            
+           
+           
             
             $("#showGrouping").jqxCheckBox({ checked: false });
             var refreshAppearance = function () {
@@ -396,6 +476,16 @@ a:hover {
             $("#showGrouping").on('change', function () {
                 refreshAppearance();
             });
+            
+            $('#grid').on('rowcollapse', function (event) 
+            		{ 
+            		    // event arguments.
+            		    var args = event.args;
+            		    // row details.
+            		    var details = args.details;
+            		    // row's bound index.
+            		    var rowBoundIndex = args.rowindex;
+            		});
             
             
             
@@ -515,7 +605,7 @@ function changeLayout(selectedObject){
 	    if(i.value == selectedObject) {
 	        mySelect.selectedIndex = j;
 	        $("#grid").jqxGrid({ theme: selectedObject });
-	        $('#jqxGrid').jqxGrid('render');
+	        $('#grid').jqxGrid('render');
 	        break;
 	    }
 	}

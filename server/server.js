@@ -80,7 +80,7 @@ function updateStats(obj){
         	console.log("found avrage activity");
 	        var duration = parseInt(result.Duration, 10);
 	        var currentDuration = parseInt(obj.Duration, 10);
-	        obj.Duration = duration + currentDuration;
+	        obj.Duration = parseInt(duration + currentDuration,10);
 	        obj.date = today;
         	dbo.collection("avgactivitiy").remove(query, function(err, result) {
 		        

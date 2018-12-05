@@ -151,7 +151,7 @@ namespace OutlookAddIn2
                     serverStream.Flush();
                     // String to store the response ASCII representation.
                     String responseData = String.Empty;
-                    Byte[] data = new Byte[1024];
+                    Byte[] data = new Byte[10000];
                     // Read the first batch of the TcpServer response bytes.
                     Int32 bytes = serverStream.Read(data, 0, data.Length);
                     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -349,9 +349,9 @@ namespace OutlookAddIn2
 
 
                         prop02 = appointment.ItemProperties.Add("checkBox", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olNumber);
-                        prop02.Value = 0;
+                        prop02.Value = 1;
+                        form.checkBox1.Checked = true;
 
-                         
 
                     }
                     Microsoft.Office.Interop.Outlook.ItemProperty propTime = appointment.ItemProperties.Add("time", Microsoft.Office.Interop.Outlook.OlUserPropertyType.olText);

@@ -41,10 +41,10 @@ function field_blur(field, email)
 function myFunction() {
 	var email = document.getElementById("email").value;
 	var password = document.getElementById("password").value;
-	if(email === "ziv@proseeda.com" && password ==="qwsa1234")
+	if((email === "ziv@proseeda.com" || email==="yuval@proseeda.com" || email==="einat@proseeda.com") && password ==="qwsa1234")
 		{
 			localStorage.setItem("userId",email);
-			window.location.assign("dayview.html");
+			window.location.assign("dashboard.html");
 		}
 	else
 		{
