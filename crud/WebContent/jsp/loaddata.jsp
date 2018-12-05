@@ -73,8 +73,9 @@
 				currentRecord.add("body",
 						new JsonPrimitive(((String)jo.get("Details"))));
 			}
-			if(jo.get("To")!=null)
+			if(jo.get("To")!=null && !jo.get("To").equals("System.__ComObject"))
 			{
+				System.out.println("TO Found: "+ ((String)jo.get("To")));
 				currentRecord.add("To",
 						new JsonPrimitive(((String)jo.get("To"))));
 			}
