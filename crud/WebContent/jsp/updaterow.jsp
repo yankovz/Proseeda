@@ -8,7 +8,7 @@
 	String rowToUpdate = request.getParameter("id");
 	String Name = request.getParameter("Name");
 	String LastName = request.getParameter("Case");
-	String Hour = request.getParameter("Duration");
+	Integer Hour = Integer.parseInt(request.getParameter("Duration"));
 	String Description = request.getParameter("Description");
 	String Source = request.getParameter("Source");
 	String Confirmed = request.getParameter("Confirmed");
@@ -41,14 +41,14 @@
 		
 		
 		System.out.println("i was called");
-		System.out.println("found" + cursor.toString());
+		System.out.println("found2" + cursor.toString());
 		
 		//while (employees.next()) {
 			
 			BasicDBObject  currentRecord = new BasicDBObject();
 			
 			currentRecord.put("Name",Name);
-			currentRecord.put("Duration",Hour);
+			currentRecord.put("Duration",String.valueOf(Hour.intValue()*60));
 			currentRecord.put("Source",Source);
 			currentRecord.put("Description",Description);
 			currentRecord.put("Confirmed",Confirmed);
@@ -56,7 +56,7 @@
 
             updateObj.put("$set", currentRecord);
             collection.update(query, updateObj, false, true);
-
+            System.out.println("update completed" + updateObj.toString());
 		}		
 	// (D)
 	
