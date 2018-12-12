@@ -100,55 +100,10 @@ div.content {
 
 
 
-a {
-    text-decoration: none;
-    display: inline-block;
-    padding: 8px 16px;
-}
 
-a:hover {
-    background-color: #ddd;
-    color: black;
-}
-
-.previous {
-    background-color: #f1f1f1;
-    color: black;
-}
-
-.next {
-    background-color: #4c54af;
-    color: white;
-}
-
-.round {
-    border-radius: 50%;
-}
 </style>
 	<script type="text/javascript">
-		var today = localStorage.getItem("date");
 		
-		// Retrieve
-		if(today===null)
-		{
-		 	today = new Date();
-			var dd = today.getDate();
-			var mm = today.getMonth()+1; //January is 0!
-			var yyyy = today.getFullYear();
-			
-			if(dd<10) {
-			    dd = '0'+dd
-			} 
-			
-			if(mm<10) {
-			    mm = '0'+mm
-			} 
-			today = mm + '/' + dd + '/' + yyyy;
-			
-			localStorage.setItem("date",today);
-			
-			document.getElementById("date").innerHTML=today;
-		}
 		
 		
 	</script>
@@ -291,13 +246,8 @@ a:hover {
             		var today = localStorage.getItem("date");
             		
             		if(today!=null){
-            			data.date=today;	
-            			document.getElementById("date").innerHTML=today;
-            		}
-            		else{
-            			
-           			 	today = new Date();
-           				var dd = today.getDate();
+            			today = new Date(today);
+            			var dd = today.getDate();
            				var mm = today.getMonth()+1; //January is 0!
            				var yyyy = today.getFullYear();
            				
@@ -309,12 +259,101 @@ a:hover {
            				    mm = '0'+mm
            				} 
            			
-           				today = mm + '/' + dd + '/' + yyyy;
-           				localStorage.setItem("date",today);
-           				data.date=today;
+           				todayStr = mm + '/' + dd + '/' + yyyy;
            				
-           				document.getElementById("date").innerHTML=today;	
+           				data.date=todayStr;
+        				
+        				
+        				var month = new Array();
+        				month[0] = "January";
+        				month[1] = "February";
+        				month[2] = "March";
+        				month[3] = "April";
+        				month[4] = "May";
+        				month[5] = "June";
+        				month[6] = "July";
+        				month[7] = "August";
+        				month[8] = "September";
+        				month[9] = "October";
+        				month[10] = "November";
+        				month[11] = "December";
+        				var n = month[today.getMonth()];
+        				dateStr = n + '&nbsp' + dd + '&nbsp' + yyyy;
+        				
+        				
+        				
+        				document.getElementById("date").innerHTML=dateStr;
+        				
+        				var weekday = new Array(7);
+        				weekday[0] =  "Sunday";
+        				weekday[1] = "Monday";
+        				weekday[2] = "Tuesday";
+        				weekday[3] = "Wednesday";
+        				weekday[4] = "Thursday";
+        				weekday[5] = "Friday";
+        				weekday[6] = "Saturday";
+
+        				var n = weekday[today.getDay()];
+        				document.getElementById("day").innerHTML='&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+n;
             			
+            		}
+            		else{
+            			
+            			var today = localStorage.getItem("date");
+            			
+            			// Retrieve
+            			if(today===null)
+            			{
+            				today = new Date();
+               				var dd = today.getDate();
+               				var mm = today.getMonth()+1; //January is 0!
+               				var yyyy = today.getFullYear();
+               				
+               				if(dd<10) {
+               				    dd = '0'+dd
+               				} 
+               				
+               				if(mm<10) {
+               				    mm = '0'+mm
+               				} 
+               			
+               				todayStr = mm + '/' + dd + '/' + yyyy;
+               				localStorage.setItem("date",today);
+               				data.date=todayStr;
+            				
+            				
+            				var month = new Array();
+            				month[0] = "January";
+            				month[1] = "February";
+            				month[2] = "March";
+            				month[3] = "April";
+            				month[4] = "May";
+            				month[5] = "June";
+            				month[6] = "July";
+            				month[7] = "August";
+            				month[8] = "September";
+            				month[9] = "October";
+            				month[10] = "November";
+            				month[11] = "December";
+            				var n = month[today.getMonth()];
+            				dateStr = n + '&nbsp' + dd + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp' + yyyy;
+            				
+            				
+            				
+            				document.getElementById("date").innerHTML=dateStr;
+            				
+            				var weekday = new Array(7);
+            				weekday[0] =  "Sunday";
+            				weekday[1] = "Monday";
+            				weekday[2] = "Tuesday";
+            				weekday[3] = "Wednesday";
+            				weekday[4] = "Thursday";
+            				weekday[5] = "Friday";
+            				weekday[6] = "Saturday";
+
+            				var n = weekday[today.getDay()];
+            				document.getElementById("day").innerHTML='&nbsp'+n;
+            			}
             		}
             		
             		data.userId = localStorage.getItem("userId");
@@ -369,7 +408,7 @@ a:hover {
                 return '<div><span style="margin: 10px 10px;">' 
                 + text + 
                 '</span>' +
-                '<span style="position: fixed; left: 514px">' 
+                '<span style="position: fixed; left: 34%">' 
                     +  Math.round(aggregate.sum*10)/10 + 
                     '</span></div>';
                     
@@ -452,7 +491,6 @@ a:hover {
                     }
           			}
                 	  ]},
-               	  { text: 'Date', columntype: 'string', filtercondition: 'starts_with',cellsalign:'center',datafield: 'Date', title:false},
                   { text: 'Time', columntype: 'textbox', filtercondition: 'starts_with',cellsalign:'center',datafield: 'Time', title:false},
                   { text: 'Description', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Description', width:'100px',title:false},
                   { text: 'Source', columntype: 'textbox', filtercondition: 'starts_with',datafield: 'Source',title:false,width:'20%' },
@@ -556,16 +594,20 @@ a:hover {
 		
 		<div id="header" >
 		
-			<img src="if_menu-alt_134216.png" onclick="openNav()" style="cursor:pointer;height: 40px; width: 40px; padding-left: 10px" alt="Italian Trulli">
+			<img src="if_menu-alt_134216.png" onclick="openNav()" style="cursor:pointer;height: 40px; width: 40px; display: inline-block; padding-left: 10px" alt="Italian Trulli">
 			
-			<a id="date" onclick="openCalender();" style="display:none">ziv</a>
 			
+		    <a href="#" onClick="moveDateBack()" style="display: inline-block;text-decoration: none;font-size: 50px;background-color: #f1f1f1;color: black;padding-left: 40%">&#8249;</a>
+			<div style="font-family: Verdana; margin-top:0%; padding-left: 1%; display: inline-block;
+					alt="Italian Trulli">
+				<p id="date" >ziv</p>
+				<p id="day">Thursday</p>
+			</div>
+			<a href="#" onClick="moveDateForward()" style="display: inline-block;text-decoration: none;font-size: 50px;background-color: #f1f1f1;color: black;padding-left: 1%">&#8250;</a>			
 			<img data-toggle="tooltip" onmouseover="showDate(this)" title="ziv" src="if_calendar_1287530.png" onclick="openCalender();" 
-				style="height: 40px; width: 40px; padding-left: 1200px" 
-				alt="Italian Trulli">
+				style="height: 40px; display: inline-block; margin-left: 40%; width: 40px">
 			<img data-toggle="tooltip" onmouseover="showUserId(this)" title="ziv" src="user-avatar-png-1.png" 
-				style="height: 40px; width: 40px; position="fixed"; padding-left: 1000px" 
-				alt="Italian Trulli">
+				style="height: 40px; width: 40px; display: inline-block">
 				  
 			
 			
@@ -633,7 +675,7 @@ function closeNav() {
     document.body.style.backgroundColor = "white";
 }
 	function openCalender(){
-		window.open("calender6.html", "myWindow", 'width=300,height=300,menubar=0,status=0,titlebar=0');
+		window.open("calender.html", "myWindow", 'left=1500,top=50,width=300,height=300,menubar=0,status=0,titlebar=0,toolbar=0,menubar=0,location=0');
 		window.close();
 	}
 	function moveDateForward(){
@@ -642,6 +684,7 @@ function closeNav() {
 		// Retrieve
 		if(today!=null)
 		{
+			
 		 	today = new Date(today.toString());
 			var dd = today.getDate()+1;
 			var mm = today.getMonth()+1; //January is 0!
@@ -658,7 +701,7 @@ function closeNav() {
 			today = mm + '/' + dd + '/' + yyyy;
 			
 			localStorage.setItem("date",today);
-			document.getElementById("date").innerHTML=today;
+			
 			location.reload();
 		}
 		
@@ -685,7 +728,7 @@ function closeNav() {
 			today = mm + '/' + dd + '/' + yyyy;
 			
 			localStorage.setItem("date",today);
-			document.getElementById("date").innerHTML=today;
+			
 			location.reload();
 		}
 		
